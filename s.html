@@ -1,460 +1,701 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>STERLA - Smart School Companion</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>STERLA - Integrated Mindmap + ChatGPT</title>
 <style>
-  :root {
-    --bg-dark: #0e0e2f;
-    --bg-gradient: linear-gradient(135deg, #4b6cb7, #182848);
-    --primary-light: #7289da;
-    --primary-dark: #283593;
-    --accent: #6c63ff;
-    --white: #f4f4f9;
-    --error-red: #e55a5a;
-    --success-green: #3cd48b;
-  }
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
-  html, body {
-    height: 100%;
-    background: var(--bg-dark);
-    color: var(--white);
-  }
-  #loginPage {
-    height: 100vh;
-    background: var(--bg-gradient);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  .login-container {
-    background: rgba(255 255 255 / 0.12);
-    padding: 30px 36px;
-    border-radius: 16px;
-    box-shadow: 0 0 20px var(--accent);
-    max-width: 360px;
-    width: 100%;
-    text-align: center;
-  }
-  .login-container h2 {
-    font-weight: 700;
-    font-size: 2rem;
-    margin-bottom: 18px;
-  }
-  .login-container p {
-    margin-bottom: 22px;
-    color: #ddd;
-  }
-  .login-container input {
-    width: 100%;
-    padding: 14px 16px;
-    margin: 12px 0;
-    border-radius: 10px;
-    border: none;
-    font-size: 1rem;
-    background: rgba(255 255 255 / 0.2);
-    color: var(--white);
-  }
-  .login-container input::placeholder {
-    color: rgba(255 255 255, 0.7);
-  }
-  .login-container button {
-    width: 100%;
-    padding: 14px 0;
-    border-radius: 12px;
-    border: none;
-    background: var(--accent);
-    color: var(--white);
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background 0.3s ease;
-  }
-  .login-container button:hover {
-    background: #5140d5;
-  }
-  #loginMessage {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    min-height: 18px;
-  }
-  .or-text {
-    margin: 22px 0 14px;
-    font-weight: 700;
-    font-size: 1rem;
-    letter-spacing: 1.2px;
-    color: rgba(255 255 255 / 0.75);
-  }
-  .social-login {
-    display: flex;
-    justify-content: space-between;
-  }
-  .social-btn {
-    flex: 1;
-    margin: 0 6px;
-    padding: 12px 8px;
-    border: 2px solid var(--white);
-    border-radius: 12px;
-    color: var(--white);
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    background: transparent;
-    transition: all 0.3s ease;
-  }
-  .social-btn:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--white);
-  }
-  .skip-login {
-    margin-top:20px;
-    font-size:1rem;
-    color: #ccc;
-  }
-  .skip-login button {
-    background:none;
-    border:none;
-    color: var(--accent);
-    cursor:pointer;
-    font-weight: bold;
-    font-size: 1rem;
-  }
+/* ---------- THEME / AESTHETICS (pinterest-like, black / light-blue / light-purple) ---------- */
+:root{
+  --black:#0b0b0d;
+  --card:#111216;
+  --light-blue:#84d2ff;
+  --light-purple:#c2b3ff;
+  --muted:#9aa0b4;
+  --white:#ffffff;
+  --success:#3cd48b;
+  --danger:#e55a5a;
+}
+*{box-sizing:border-box;font-family:Inter, Poppins, system-ui, sans-serif;}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0b0d 0%, #0f1724 100%);color:var(--white);}
 
-  #appPage {
-    display: none;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    background: var(--bg-gradient);
-  }
-  #sidebar {
-    width: 260px;
-    background: var(--primary-dark);
-    padding: 28px 20px;
-    color: var(--white);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  #sidebar h2 {
-    font-size: 2.4rem;
-    margin-bottom: 30px;
-  }
-  .nav-btn {
-    background: transparent;
-    color: var(--white);
-    border: none;
-    padding: 16px 20px;
-    border-radius: 16px;
-    font-size: 1.2rem;
-    text-align: left;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  .nav-btn:hover {
-    background: var(--primary-light);
-  }
-  #main {
-    flex-grow: 1;
-    padding: 36px 48px;
-    overflow-y: auto;
-    color: var(--white);
-  }
-  .page {
-    display: none;
-  }
-  .page.active {
-    display: block;
-  }
+/* Layout */
+#loginPage{height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));padding:28px;border-radius:20px;width:360px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03);}
+.login-card h2{margin-bottom:8px;color:var(--light-purple)}
+.login-card p{color:var(--muted);margin-bottom:16px}
+.input{width:100%;padding:12px;border-radius:12px;border:none;margin:8px 0;background:rgba(255,255,255,0.03);color:var(--white);outline:none}
+.btn{width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(90deg,var(--light-blue),var(--light-purple));color:#001;cursor:pointer;font-weight:700}
+.small-btn{padding:8px 12px;border-radius:10px;border:none;background:transparent;color:var(--light-blue);cursor:pointer}
 
-  #welcomeBox {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(108, 99, 255, 0.15);
-    border-radius: 24px;
-    padding: 48px;
-    margin-bottom: 32px;
-  }
-  #welcomeBox h2 {
-    font-size: 3rem;
-    max-width: 64%;
-  }
-  #welcomeBox p {
-    font-size: 1.3rem;
-    margin-top: 14px;
-    max-width: 64%;
-  }
-  #welcomeBox img {
-    width: 180px;
-    filter: drop-shadow(0 0 12px rgba(108, 99, 255, 0.7));
-  }
+/* APP */
+#appPage{display:none;height:100vh;display:flex;overflow:hidden}
+#sidebar{width:260px;background:linear-gradient(180deg,#071028,#0b1633);padding:28px;color:var(--white);border-right:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:14px}
+.brand{font-size:28px;font-weight:800;color:var(--light-purple);letter-spacing:1px}
+.nav-btn{background:transparent;border:none;color:var(--muted);padding:12px 14px;text-align:left;border-radius:10px;cursor:pointer;font-weight:700}
+.nav-btn.active, .nav-btn:hover{background:rgba(255,255,255,0.02);color:var(--white);box-shadow:0 6px 20px rgba(124, 107, 255, 0.08)}
+#main{flex:1;overflow:auto;padding:30px;background:linear-gradient(180deg,#0b0f1a 0%, #0b1220 30%);}
 
-  .subject-card {
-    padding: 22px;
-    margin: 18px 16px;
-    background: var(--bg-dark);
-    border-radius: 24px;
-    border: 2px solid var(--primary-light);
-    width: 178px;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--white);
-    transition: background 0.4s ease, color 0.4s ease;
-  }
-  .subject-card:hover {
-    background: var(--primary-light);
-    color: var(--bg-dark);
-  }
+/* welcome card */
+#welcomeBox{background:linear-gradient(180deg,#071028, #0b1430);border-radius:16px;padding:26px;color:var(--white);display:flex;justify-content:space-between;align-items:center;gap:20px}
+#welcomeBox h2{color:var(--light-blue);font-size:22px;margin:0}
+#welcomeBox p{margin:0;color:var(--muted)}
 
-  .topic-btn {
-    padding: 16px 26px;
-    margin: 10px 8px;
-    border-radius: 26px;
-    background: var(--primary-light);
-    color: var(--white);
-    font-size: 1.2rem;
-    cursor: pointer;
-    border: none;
-    user-select: none;
-    transition: background 0.3s ease;
-  }
-  .topic-btn:hover {
-    background: var(--accent);
-  }
+/* Subject cards (pinterest tiles) */
+.subject-grid{margin-top:18px;display:flex;flex-wrap:wrap;gap:18px}
+.subject-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px;width:200px;cursor:pointer;box-shadow:0 10px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02);font-weight:800;color:var(--light-blue;text-align:center)}
+.subject-card:hover{transform:translateY(-6px);box-shadow:0 18px 50px rgba(6,10,40,0.8)}
 
-  .output-box {
-    background: rgba(255 255 255 / 0.1);
-    border-radius: 24px;
-    padding: 36px;
-    min-height: 260px;
-    font-size: 1.2rem;
-    line-height: 1.6;
-  }
-  .announce {
-    background: rgba(108, 99, 255, 0.15);
-    padding: 14px 24px;
-    border-radius: 20px;
-    margin-bottom: 18px;
-    font-size: 1.1rem;
-  }
+/* Pages */
+.page{display:none}
+.page.active{display:block}
 
-  #chatBox {
-    background: rgba(255 255 255 / 0.1);
-    padding: 24px;
-    border-radius: 20px;
-    height: 460px;
-    overflow-y: auto;
-    margin-bottom: 18px;
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-  #chatBox div {
-    margin-bottom: 14px;
-  }
-  #chatInput {
-    padding: 18px;
-    border-radius: 16px;
-    border: none;
-    width: 77%;
-    font-size: 1.1rem;
-    background: rgba(255 255 255 / 0.1);
-    color: var(--white);
-    margin-right: 12px;
-  }
-  #chatInput::placeholder {
-    color: rgba(255 255 255 / 0.6);
-  }
-  #chatBtn {
-    background: var(--accent);
-    border: none;
-    color: white;
-    font-size: 1.1rem;
-    padding: 18px 36px;
-    border-radius: 16px;
-    cursor: pointer;
-    font-weight: 700;
-    transition: background 0.3s ease;
-  }
-  #chatBtn:hover {
-    background: #6258d4;
-  }
+/* Output boxes */
+.output-box{background:linear-gradient(180deg,#061022,#081428);padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.02);color:var(--white)}
 
-  #flowArea {
-    background: rgba(255 255 255 / 0.15);
-    border-radius: 22px;
-    border: 3px solid var(--primary-light);
-    margin-top: 28px;
-    position: relative;
-    overflow: auto;
-    width: 100%;
-    height: 620px;
-  }
-  svg {
-    user-select: none;
-  }
+/* Flowchart area (SVG boxes) */
+#flowArea{background:linear-gradient(180deg,#081427,#061022);padding:16px;border-radius:14px;margin-top:18px;min-height:420px;max-height:740px;overflow:auto;border:1px solid rgba(255,255,255,0.03)}
+svg.flow-svg{width:1600px;height:1200px;display:block}
 
-  .toast {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 48px;
-    padding: 14px 32px;
-    border-radius: 24px;
-    color: white;
-    font-weight: 700;
-    font-size: 1.2rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    z-index: 9999;
-    animation: fadein 0.3s, fadeout 0.3s 1.2s;
-  }
-  .toast-success {background: var(--success-green);}
-  .toast-error {background: var(--error-red);}
-  @keyframes fadein {from {opacity: 0;} to {opacity: 1;}}
-  @keyframes fadeout {from {opacity: 1;} to {opacity: 0;}}
+/* Mindmap interactive area */
+#mindmapContainer{position:relative;background:linear-gradient(180deg,#071427,#02101a);border-radius:14px;padding:12px;min-height:420px;overflow:auto;border:1px solid rgba(255,255,255,0.03)}
+.mm-node{position:absolute;padding:10px 14px;border-radius:10px;background:#071f35;border:2px solid rgba(132,210,255,0.15);cursor:grab;color:var(--white);min-width:110px;text-align:center;box-shadow:0 10px 24px rgba(2,6,23,0.6)}
+.mm-node:active{cursor:grabbing}
+#connectionsSvg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+
+/* Chat */
+#chatBox{background:#061025;padding:12px;border-radius:12px;min-height:360px;max-height:520px;overflow:auto;border:1px solid rgba(255,255,255,0.02)}
+.chat-line{margin-bottom:12px}
+.chat-user{color:var(--light-blue);font-weight:700}
+.chat-ai{color:var(--light-purple);font-weight:700}
+.chat-input{margin-top:12px;display:flex;gap:12px}
+.chat-input input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--white)}
+.chat-input button{padding:10px 16px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--light-blue),var(--light-purple));color:#001;font-weight:800}
+
+/* toast */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;padding:10px 18px;border-radius:999px;font-weight:700}
+.toast.success{background:var(--success);color:#000}
+.toast.error{background:var(--danger);color:#fff}
+
+/* responsive */
+@media (max-width:900px){
+  #sidebar{display:none}
+  #main{padding:18px}
+}
 </style>
 </head>
 <body>
 
-<div id="loginPage" aria-label="Optional login screen">
-  <div class="login-container" role="form" aria-labelledby="loginTitle">
-    <h2 id="loginTitle">Optional Login</h2>
-    <p>Use email/passcode or sign up via Google, Facebook or Phone. Or continue without login.</p>
-    <input type="email" id="email" placeholder="Enter Email" aria-label="Email (optional)" />
-    <input type="password" id="passcode" placeholder="Enter Passcode" aria-label="Passcode (optional)" />
-    <button onclick="login()">Login</button>
-    <p id="loginMessage" role="alert"></p>
-    <div class="or-text" aria-hidden="true">OR Sign up with</div>
-    <div class="social-login" role="region" aria-label="Social login options">
-      <button class="social-btn" onclick="alert('Google login not implemented')" aria-label="Sign up with Google">Google</button>
-      <button class="social-btn" onclick="alert('Facebook login not implemented')" aria-label="Sign up with Facebook">Facebook</button>
-      <button class="social-btn" onclick="alert('Phone login not implemented')" aria-label="Sign up with Phone Number">Phone Number</button>
-    </div>
-    <div class="skip-login" aria-label="Continue without login option">
-      Or <button onclick="skipLogin()">Continue without login</button>
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-card" role="dialog" aria-labelledby="loginTitle">
+    <h2 id="loginTitle">STERLA</h2>
+    <p>Login (optional). Use any email/pass or continue as guest.</p>
+    <input id="email" class="input" placeholder="email (optional)" />
+    <input id="passcode" class="input" placeholder="passcode (optional)" />
+    <button class="btn" onclick="onLogin()">Continue</button>
+    <p id="loginMessage" style="color:var(--danger);min-height:18px"></p>
+    <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+      <button class="small-btn" onclick="onLogin(true)">Continue as Guest</button>
+      <button class="small-btn" onclick="promptSetKey()">Set OpenAI Key</button>
     </div>
   </div>
 </div>
 
-<div id="appPage" role="main" aria-live="polite" aria-atomic="true" aria-relevant="additions">
-  <nav id="sidebar" aria-label="Main navigation">
-    <h2>STERLA</h2>
-    <button class="nav-btn" onclick="showPage('homePage')" aria-label="Go to Home">Home</button>
-    <button class="nav-btn" onclick="showPage('dashboard')" aria-label="Go to Dashboard">Dashboard</button>
-    <button class="nav-btn" onclick="showPage('subjectsPage')" aria-label="Go to Subjects">Subjects</button>
-    <button class="nav-btn" onclick="showPage('mindmap')" aria-label="Go to Mind Map">Mind Map</button>
-    <button class="nav-btn" onclick="showPage('quizPage')" aria-label="Go to Quiz">Quiz</button>
-    <button class="nav-btn" onclick="showPage('wsPage')" aria-label="Go to Worksheet">Worksheet</button>
-    <button class="nav-btn teacher-only" onclick="showPage('managePage')" aria-label="Go to Teacher Panel">Teacher Panel</button>
-    <button class="nav-btn" onclick="showPage('aiChatPage')" aria-label="Go to AI Chat Assistant">AI Chat</button>
-  </nav>
+<!-- APP -->
+<div id="appPage" aria-live="polite">
+  <aside id="sidebar" role="navigation">
+    <div class="brand">STERLA</div>
+    <button class="nav-btn active" data-page="homePage" onclick="navigate(event)">Home</button>
+    <button class="nav-btn" data-page="dashboard" onclick="navigate(event)">Dashboard</button>
+    <button class="nav-btn" data-page="subjectsPage" onclick="navigate(event)">Subjects</button>
+    <button class="nav-btn" data-page="topicPage" onclick="navigate(event)">Topics</button>
+    <button class="nav-btn" data-page="mindmapPage" onclick="navigate(event)">Mind Map</button>
+    <button class="nav-btn" data-page="quizPage" onclick="navigate(event)">Quiz</button>
+    <button class="nav-btn" data-page="wsPage" onclick="navigate(event)">Worksheet</button>
+    <button class="nav-btn" data-page="aiChatPage" onclick="navigate(event)">AI Chat</button>
+    <div style="flex:1"></div>
+    <div style="font-size:12px;color:var(--muted)">Tip: Add OpenAI key via top login screen for AI features.</div>
+  </aside>
 
-  <div id="main">
-    <section id="homePage" class="page active" tabindex="-1">
-      <h1 id="welcomeUser">Welcome to STERLA</h1>
-      <div id="welcomeBox" class="glass" role="region" aria-label="Welcome message and quick instructions">
+  <main id="main">
+    <!-- HOME -->
+    <section id="homePage" class="page active">
+      <div id="welcomeBox">
         <div>
-          <h2>Your learning companion</h2>
-          <p>Choose a subject → pick a topic → get mindmap / quiz / worksheet!</p>
+          <h2>Welcome to STERLA</h2>
+          <p>Your learning companion — choose a subject and topic to get started.</p>
         </div>
-        <img src="https://cdn-icons-png.flaticon.com/512/2942/2942943.png" alt="School Icon" />
+        <div style="text-align:right;color:var(--muted)">
+          <div id="welcomeUser">Guest</div>
+          <div style="font-size:12px;margin-top:6px">Smart School Companion</div>
+        </div>
       </div>
-      <div style="margin-top: 18px;">
-        <h3>Quick Subjects</h3>
-        <div id="subjectsQuick"></div>
-      </div>
+
+      <h3 style="color:var(--light-blue);margin-top:8px">Quick Subjects</h3>
+      <div class="subject-grid" id="subjectsQuick"></div>
     </section>
 
-    <section id="dashboard" class="page" tabindex="-1">
-      <h1>Dashboard</h1>
-      <h2>Announcements</h2>
-      <div class="announce">• Chemistry worksheet due Monday</div>
-      <div class="announce">• Biology test next Friday</div>
-      <div class="announce">• Math homework submission closes tonight</div>
-    </section>
-
-    <section id="subjectsPage" class="page" tabindex="-1">
-      <h1>Select a Subject</h1>
-      <div id="subjectsContainer"></div>
-    </section>
-
-    <section id="topicPage" class="page" tabindex="-1">
-      <h1 id="topicTitle"></h1>
-      <div id="topicButtons"></div>
-    </section>
-
-    <section id="mindmap" class="page" tabindex="-1">
-      <h2>Flowchart Generator</h2>
-      <label for="mmTopic">Select Topic:</label>
-      <select id="mmTopic" aria-label="Select Topic for Mindmap"><option value="">Choose topic</option></select>
-      <button onclick="loadFlowchart()" aria-label="Generate Flowchart">Generate Flowchart</button>
-      <div id="flowArea">
-        <svg id="flowSVG" width="2000" height="2000"></svg>
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="page">
+      <h2 style="color:var(--light-purple)">Dashboard</h2>
+      <div class="output-box">
+        <div class="announce">• Chemistry worksheet due Monday</div>
+        <div class="announce">• Biology test next Friday</div>
       </div>
     </section>
 
-    <section id="quizPage" class="page" tabindex="-1">
-      <h1>Quiz</h1>
-      <div class="output-box" id="quizOutput"></div>
+    <!-- SUBJECTS -->
+    <section id="subjectsPage" class="page">
+      <h2 style="color:var(--light-blue)">Select a Subject</h2>
+      <div id="subjectsContainer" class="subject-grid"></div>
     </section>
 
-    <section id="wsPage" class="page" tabindex="-1">
-      <h1>Worksheet</h1>
-      <div class="output-box" id="wsOutput"></div>
+    <!-- TOPIC PAGE -->
+    <section id="topicPage" class="page">
+      <h2 id="topicTitle" style="color:var(--light-purple)">Topics</h2>
+      <div id="topicButtons" style="margin-top:12px"></div>
     </section>
 
-    <section id="managePage" class="page teacher-only" tabindex="-1">
-      <h1>Teacher Panel</h1>
-      <p>Here you can upload worksheets, add quizzes, view submissions, manage announcements.</p>
+    <!-- MINDMAP / FLOWCHART PAGE -->
+    <section id="mindmapPage" class="page">
+      <h2 style="color:var(--light-blue)">Mindmap & Flowchart</h2>
+
+      <div style="display:flex;gap:12px;align-items:center;margin-top:12px">
+        <div>
+          <label style="color:var(--muted)">Flowchart topic:</label><br/>
+          <select id="mmTopic" class="input" style="width:240px">
+            <option value="">Choose topic</option>
+          </select>
+        </div>
+        <button class="btn" onclick="loadFlowchart()">Generate Flowchart</button>
+        <button class="small-btn" onclick="resetFlow()">Clear Flow</button>
+      </div>
+
+      <div id="flowArea" style="margin-top:16px">
+        <svg id="flowSVG" class="flow-svg" viewBox="0 0 1200 1200" preserveAspectRatio="xMinYMin"></svg>
+      </div>
+
+      <hr style="margin:22px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+        <button class="btn" onclick="createRootNode()">Create Root Node</button>
+        <button class="btn" onclick="promptNewNode()">Add Node</button>
+        <button class="btn" onclick="generateAIBranches()">Generate AI Branches</button>
+        <button class="small-btn" onclick="clearMindmap()">Clear Mindmap</button>
+      </div>
+
+      <div id="mindmapContainer">
+        <svg id="connectionsSvg" width="100%" height="100%" style="position:absolute;left:0;top:0;pointer-events:none"></svg>
+        <div id="nodesLayer" style="position:relative;min-height:420px"></div>
+      </div>
     </section>
 
-    <section id="aiChatPage" class="page" tabindex="-1">
-      <h1>AI Chat Assistant</h1>
-      <div id="chatBox" aria-live="polite" aria-atomic="true"></div>
-      <input type="text" id="chatInput" placeholder="Ask me anything..." aria-label="Chat input" />
-      <button id="chatBtn" aria-label="Send chat message">Send</button>
+    <!-- QUIZ -->
+    <section id="quizPage" class="page">
+      <h2 style="color:var(--light-purple)">Quiz</h2>
+      <div id="quizOutput" class="output-box" style="margin-top:12px"></div>
     </section>
-  </div>
+
+    <!-- WORKSHEET -->
+    <section id="wsPage" class="page">
+      <h2 style="color:var(--light-blue)">Worksheet</h2>
+      <div id="wsOutput" class="output-box" style="margin-top:12px"></div>
+    </section>
+
+    <!-- AI CHAT -->
+    <section id="aiChatPage" class="page">
+      <h2 style="color:var(--light-purple)">AI Chat (ChatGPT)</h2>
+      <div id="chatBox"></div>
+      <div class="chat-input" style="margin-top:12px">
+        <input id="chatInput" placeholder="Ask the AI..." />
+        <button onclick="sendChat()">Send</button>
+      </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:13px">Note: AI features require an OpenAI key configured on the server or via the client prompt (only for local testing).</p>
+    </section>
+  </main>
 </div>
 
+<!-- ---------- SCRIPTS: integrated logic ---------- -->
 <script>
-  window.onload = function() {
-    if(confirm("Do you want to see our paid promotion?")){
-      alert("Thank you for your interest! Visit our sponsor for awesome deals.");
+/* ========== App state & data ========== */
+let userName = null;
+let selectedSubject = "";
+let chosenTopic = "";
+
+const subjectTopics = {
+  English:["Grammar","Formal Letter","Speech","Prose"],
+  Math:["Algebra","Linear Equations","Mensuration"],
+  Science:["Reproduction in Animals","Sound","Electricity"],
+  "Social Science":["1857 Revolt","Resources","Judiciary"],
+  Hindi:["Vyakaran","Patra Lekhan"],
+  Computer:["HTML","AI Basics"],
+  Sanskrit:["Shabd Roop","Dhatu Roop"],
+  French:["French Grammar","Culture"],
+  ICT:["Networks","Cybersecurity"]
+};
+
+const detailedFlowData = {
+  English:{
+    Grammar:["Parts of Speech","Sentence Structure","Tenses","Punctuation","Usage Rules"],
+    "Formal Letter":["Sender Address","Date","Receiver Address","Subject","Salutation","Body Paragraphs","Closing"],
+    Speech:["Introduction","Body Points","Conclusion","Eye Contact","Gestures","Voice Modulation"],
+    Prose:["Paragraphs","Characters","Storyline","Dialogue","Narrative Flow"]
+  },
+  Math:{
+    Algebra:["Variables","Expressions","Equations","Inequalities","Functions"],
+    "Linear Equations":["Solving Methods","Graphing","Application"],
+    Mensuration:["Area","Volume","Surface Area","Perimeter"]
+  }
+};
+
+const quizBank = {
+  English:{
+    Grammar:[
+      {q:"Which of the following is a noun?", options:["run","dog","quickly","beautiful"], answer:"dog"},
+      {q:"Identify the verb.", options:["is","happy","table","red"], answer:"is"}
+    ]
+  }
+};
+
+const wsBank = {
+  English:{
+    Grammar:[
+      "Write 5 nouns.",
+      "Write 5 verbs.",
+      "Identify parts of speech in a sentence."
+    ]
+  }
+};
+
+/* ========== Navigation & UI helpers ========== */
+function navigate(e){
+  const btn = e.currentTarget;
+  document.querySelectorAll('#sidebar .nav-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const page = btn.getAttribute('data-page');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById(page);
+  if(el) el.classList.add('active');
+
+  // When showing certain pages populate data
+  if(page === 'subjectsPage') loadSubjects();
+  if(page === 'topicPage') renderTopics();
+  if(page === 'mindmapPage') populateMindmapTopics();
+  if(page === 'quizPage') loadQuiz();
+  if(page === 'wsPage') loadWorksheet();
+}
+
+/* ========== Login ========== */
+function onLogin(guest=false){
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('passcode').value.trim();
+  const msg = document.getElementById('loginMessage');
+  msg.textContent = '';
+  if(!guest && (!email || !pass)){
+    msg.textContent = 'Enter email and passcode or click "Continue as Guest".';
+    return;
+  }
+  userName = guest ? 'Guest' : email;
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('appPage').style.display='flex';
+  document.getElementById('welcomeUser').innerText = userName;
+  loadSubjects();
+}
+
+/* ========== Quick subjects & subjects page ========== */
+function loadSubjects(){
+  const quick = document.getElementById('subjectsQuick');
+  const container = document.getElementById('subjectsContainer');
+  quick.innerHTML = ''; container.innerHTML = '';
+  Object.keys(subjectTopics).forEach(sub=>{
+    const btn = document.createElement('button');
+    btn.className = 'subject-card';
+    btn.innerText = sub;
+    btn.onclick = ()=>selectSubject(sub);
+    quick.appendChild(btn);
+
+    const card = btn.cloneNode(true);
+    card.onclick = ()=>selectSubject(sub);
+    container.appendChild(card);
+  });
+}
+
+/* ========== Topic rendering ========== */
+function selectSubject(sub){
+  selectedSubject = sub;
+  chosenTopic = '';
+  document.getElementById('topicTitle').innerText = `${sub} Topics`;
+  // navigate to topic page
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('topicPage').classList.add('active');
+  renderTopics();
+}
+
+function renderTopics(){
+  const container = document.getElementById('topicButtons');
+  container.innerHTML = '';
+  if(!selectedSubject) return;
+  subjectTopics[selectedSubject].forEach(tp=>{
+    const b = document.createElement('button');
+    b.className = 'topic-btn';
+    b.innerText = tp;
+    b.onclick = ()=> { selectTopic(tp) };
+    container.appendChild(b);
+  });
+}
+
+function selectTopic(tp){
+  chosenTopic = tp;
+  // populate mmTopic select as well
+  populateMindmapTopics();
+  // go directly to mindmap page
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('mindmapPage').classList.add('active');
+  showToast(`Topic selected: ${tp}`, 'success');
+}
+
+/* ========== Flowchart generator ========== */
+function populateMindmapTopics(){
+  const sel = document.getElementById('mmTopic');
+  sel.innerHTML = '<option value="">Choose topic</option>';
+  if(selectedSubject){
+    subjectTopics[selectedSubject].forEach(t=>{
+      const o = document.createElement('option');
+      o.value = t; o.textContent = t;
+      if(t === chosenTopic) o.selected = true;
+      sel.appendChild(o);
+    });
+  }
+}
+
+function resetFlow(){
+  document.getElementById('flowSVG').innerHTML = '';
+}
+
+function loadFlowchart(){
+  const topic = document.getElementById('mmTopic').value || chosenTopic;
+  if(!topic){ alert('Select a topic'); return; }
+  const data = (detailedFlowData[selectedSubject] && detailedFlowData[selectedSubject][topic])|| [];
+  if(!data.length){ alert('No flow data'); return; }
+  const svg = document.getElementById('flowSVG');
+  svg.innerHTML = '';
+  const boxW=300, boxH=70, gap=40, startX=80;
+  data.forEach((txt,i)=>{
+    const y = i*(boxH+gap)+40;
+    const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    rect.setAttribute("x",startX);
+    rect.setAttribute("y",y);
+    rect.setAttribute("width",boxW);
+    rect.setAttribute("height",boxH);
+    rect.setAttribute("rx",12);
+    rect.setAttribute("fill","#071a2a");
+    rect.setAttribute("stroke", "url(#g1)");
+    rect.setAttribute("stroke-width",2);
+    svg.appendChild(rect);
+
+    const txtEl = document.createElementNS("http://www.w3.org/2000/svg","text");
+    txtEl.textContent = txt;
+    txtEl.setAttribute("x",startX+boxW/2);
+    txtEl.setAttribute("y",y+boxH/2+6);
+    txtEl.setAttribute("text-anchor","middle");
+    txtEl.setAttribute("fill","white");
+    txtEl.setAttribute("font-size","16");
+    svg.appendChild(txtEl);
+
+    if(i < data.length-1){
+      const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+      line.setAttribute("x1",startX+boxW/2);
+      line.setAttribute("y1",y+boxH);
+      line.setAttribute("x2",startX+boxW/2);
+      line.setAttribute("y2",y+boxH+gap-10);
+      line.setAttribute("stroke", "rgba(132,210,255,0.25)");
+      line.setAttribute("stroke-width",3);
+      svg.appendChild(line);
     }
-    loadSubjects();
+  });
+}
+
+/* ========== Quiz & Worksheet ========== */
+function loadQuiz(){
+  const out = document.getElementById('quizOutput'); out.innerHTML='';
+  if(!selectedSubject || !chosenTopic){
+    out.innerHTML = '<p>Please select subject & topic first.</p>'; return;
+  }
+  const qlist = quizBank[selectedSubject] && quizBank[selectedSubject][chosenTopic];
+  if(!qlist){ out.innerHTML = '<p>Quiz not available.</p>'; return; }
+  qlist.forEach((q,i)=>{
+    const div = document.createElement('div'); div.style.marginBottom='12px';
+    div.innerHTML = `<p><strong>${i+1}.</strong> ${q.q}</p>`;
+    q.options.forEach(opt=>{
+      const b = document.createElement('button'); b.className='topic-btn'; b.style.marginRight='8px';
+      b.innerText = opt; b.onclick = ()=> showToast(opt===q.answer ? 'Correct' : 'Wrong. Ans: '+q.answer, opt===q.answer ? 'success' : 'error');
+      div.appendChild(b);
+    });
+    out.appendChild(div);
+  });
+}
+function loadWorksheet(){
+  const out = document.getElementById('wsOutput'); out.innerHTML='';
+  if(!selectedSubject || !chosenTopic){ out.innerText='Select subject & topic'; return; }
+  const w = wsBank[selectedSubject] && wsBank[selectedSubject][chosenTopic];
+  if(!w){ out.innerText='Worksheet not available'; return; }
+  out.innerHTML = '<ol>'+ w.map(x=>`<li>${x}</li>`).join('') +'</ol>';
+}
+
+/* ========== Toast ========== */
+function showToast(msg, type='success'){
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type==='success' ? 'success' : 'error');
+  t.innerText = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),1600);
+}
+
+/* ========== Mindmap interactive engine ========== */
+const nodesLayer = document.getElementById('nodesLayer');
+const connectionsSvg = document.getElementById('connectionsSvg');
+let mmNodes = []; // {id, el, x, y, text}
+let mmEdges = []; // {fromId,toId}
+let nodeCounter = 0;
+
+function createNode(text, x=160, y=120){
+  const id = 'n'+(++nodeCounter);
+  const el = document.createElement('div');
+  el.className = 'mm-node';
+  el.id = id;
+  el.innerText = text;
+  el.style.left = x+'px';
+  el.style.top = y+'px';
+  nodesLayer.appendChild(el);
+  mmNodes.push({id, el, x, y, text});
+  makeDraggable(el);
+  drawConnections();
+  return id;
+}
+
+function createRootNode(){
+  // place center-ish
+  const rect = nodesLayer.getBoundingClientRect();
+  createNode(chosenTopic || 'Main Topic', Math.max(40, rect.width/2 - 80), 80);
+}
+
+function promptNewNode(){
+  const text = prompt('Node text:');
+  if(text) createNode(text, 60 + Math.random()*360, 160 + Math.random()*120);
+}
+
+function clearMindmap(){ mmNodes.forEach(n=>n.el.remove()); mmNodes=[]; mmEdges=[]; nodeCounter=0; drawConnections(); }
+
+function makeDraggable(el){
+  let offsetX=0, offsetY=0, dragging=false;
+  el.onpointerdown = (ev)=>{
+    dragging=true;
+    el.setPointerCapture(ev.pointerId);
+    offsetX = ev.clientX - el.getBoundingClientRect().left;
+    offsetY = ev.clientY - el.getBoundingClientRect().top;
   };
+  el.onpointermove = (ev)=>{
+    if(!dragging) return;
+    const parentRect = nodesLayer.getBoundingClientRect();
+    const nx = ev.clientX - parentRect.left - offsetX;
+    const ny = ev.clientY - parentRect.top - offsetY;
+    el.style.left = nx + 'px';
+    el.style.top = ny + 'px';
+    // update node in mmNodes
+    const obj = mmNodes.find(n=>n.id === el.id);
+    if(obj){ obj.x = nx; obj.y = ny; }
+    drawConnections();
+  };
+  el.onpointerup = (ev)=>{ dragging=false; try{ el.releasePointerCapture(ev.pointerId);}catch(e){} };
+  // right-click to connect last selected node to this node
+  el.oncontextmenu = (ev)=>{ ev.preventDefault(); handleNodeContext(el.id); };
+}
 
-  const loginPage = document.getElementById("loginPage");
-  const appPage = document.getElementById("appPage");
-  const emailInput = document.getElementById("email");
-  const passcodeInput = document.getElementById("passcode");
-  const loginMsg = document.getElementById("loginMessage");
-  const subjectsQuick = document.getElementById("subjectsQuick");
-  const topicTitle = document.getElementById("topicTitle");
-  const topicButtons = document.getElementById("topicButtons");
-  const chatBtn = document.getElementById("chatBtn");
-  const chatInput = document.getElementById("chatInput");
-  const chatBox = document.getElementById("chatBox");
-  const mmTopicSelect = document.getElementById("mmTopic");
-  const svgContainer = document.getElementById("flowSVG");
-  const diagramTitle = document.querySelector("#mindmap h2");
-  const welcomeUser = document.getElementById("welcomeUser");
+let connectFrom = null;
+function handleNodeContext(id){
+  // toggles source selection for connecting nodes
+  if(!connectFrom){ connectFrom = id; showToast('Source selected: ' + id, 'success'); return; }
+  if(connectFrom === id){ connectFrom = null; showToast('Cancelled', 'error'); return; }
+  // create edge
+  mmEdges.push({fromId: connectFrom, toId: id}); connectFrom = null; drawConnections(); showToast('Connected', 'success');
+}
 
-  let selectedSubject = "";
-  let chosenTopic = "";
+function drawConnections(){
+  // size svg to nodesLayer
+  const layerRect = nodesLayer.getBoundingClientRect();
+  connectionsSvg.setAttribute('width', layerRect.width);
+  connectionsSvg.setAttribute('height', layerRect.height);
+  connectionsSvg.innerHTML = '';
+  // for each edge, draw a curved path
+  mmEdges.forEach(e=>{
+    const a = document.getElementById(e.fromId).getBoundingClientRect();
+    const b = document.getElementById(e.toId).getBoundingClientRect();
+    // calculate relative coordinates to nodesLayer
+    const parent = nodesLayer.getBoundingClientRect();
+    const x1 = a.left + a.width/2 - parent.left;
+    const y1 = a.top + a.height/2 - parent.top;
+    const x2 = b.left + b.width/2 - parent.left;
+    const y2 = b.top + b.height/2 - parent.top;
+    const cx = (x1+x2)/2;
+    const cy = Math.min(y1,y2) - 40;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', `M ${x1},${y1} Q ${cx},${cy} ${x2},${y2}`);
+    path.setAttribute('stroke','rgba(132,210,255,0.5)');
+    path.setAttribute('stroke-width','3');
+    path.setAttribute('fill','none');
+    connectionsSvg.appendChild(path);
+  });
+}
 
-  // Minimal sample data - extend as needed
-  const subjectTopics = {
-    English: ["Grammar", "Formal Letter", "Speech", "Prose"],
-    Math:
+/* ========== AI BRANCH GENERATION for Mindmap ========== */
+/* Uses the server proxy at POST /api/openai (recommended). If not found, will attempt
+   a direct browser fetch using an API key stored in sessionStorage (only for local testing). */
+
+async function generateAIBranches(){
+  if(mmNodes.length===0){ alert('Create a root node first (Create Root Node)'); return; }
+  const root = mmNodes[0]; // use first node as root
+  const topic = root.text || chosenTopic || 'Main Topic';
+  const systemPrompt = `Generate 5 short branch titles for the topic "${topic}". Return results as a JSON array of strings only.`;
+  try{
+    const resp = await callOpenAI({messages:[{role:'system',content:systemPrompt}], max_tokens:300});
+    // expect returned content is JSON array or lines — attempt robust parsing
+    let content = resp?.choices?.[0]?.message?.content || resp?.choices?.[0]?.text || '';
+    let arr;
+    try{ arr = JSON.parse(content); }
+    catch(e){
+      // fallback: split lines and strip numbering
+      arr = content.split(/\r?\n/).map(s=>s.replace(/^\s*[\d\-\.\)]*\s*/,'').trim()).filter(Boolean);
+    }
+    if(!arr || arr.length===0) throw new Error('No branches returned');
+    // create nodes in a row under root
+    const parentRect = nodesLayer.getBoundingClientRect();
+    const baseX = root.x || 60;
+    const baseY = (root.y || 60) + 140;
+    arr.slice(0,10).forEach((txt,i)=>{
+      createNode(txt, baseX + i*160, baseY);
+      // connect root to new node
+      const newNode = mmNodes[mmNodes.length-1];
+      mmEdges.push({fromId: root.id, toId: newNode.id});
+    });
+    drawConnections();
+    showToast('Branches created', 'success');
+  } catch(err){
+    console.error(err);
+    showToast('AI error: ' + (err.message || 'failed'), 'error');
+  }
+}
+
+/* ========== Chat (ChatGPT) integration ========== */
+/* Client sends {message: "text"} to /api/openai (POST). Server proxies to OpenAI.
+   If no server available, you can set key via promptSetKey() and code will call OpenAI directly (not secure). */
+
+async function sendChat(){
+  const input = document.getElementById('chatInput');
+  const txt = input.value.trim();
+  if(!txt) return;
+  appendChat('user', txt);
+  input.value = '';
+  appendChat('ai', '...'); // temporary
+  try{
+    const resp = await callOpenAI({messages:[{role:'user',content:txt}], max_tokens:500});
+    const aiTxt = resp?.choices?.[0]?.message?.content || resp?.choices?.[0]?.text || 'No response';
+    // remove temporary '...' last AI message
+    const aiNodes = document.querySelectorAll('#chatBox .chat-line');
+    const last = aiNodes[aiNodes.length-1];
+    if(last && last.dataset.role==='ai'){ last.querySelector('.text').innerText = aiTxt; } else appendChat('ai', aiTxt);
+    // scroll
+    const chatBox = document.getElementById('chatBox');
+    chatBox.scrollTop = chatBox.scrollHeight;
+  } catch(e){
+    console.error(e);
+    showToast('Chat error: ' + (e.message||'failed'),'error');
+  }
+}
+
+function appendChat(role, text){
+  const box = document.getElementById('chatBox');
+  if(role==='user'){
+    const d = document.createElement('div'); d.className='chat-line'; d.dataset.role='user';
+    d.innerHTML = `<div class="chat-user">You</div><div class="text" style="color:var(--white)">${escapeHtml(text)}</div>`;
+    box.appendChild(d);
+  } else {
+    const d = document.createElement('div'); d.className='chat-line'; d.dataset.role='ai';
+    d.innerHTML = `<div class="chat-ai">AI</div><div class="text" style="color:var(--muted)">${escapeHtml(text)}</div>`;
+    box.appendChild(d);
+  }
+}
+
+/* ========== OpenAI call helper ==========
+   First attempts to POST to /api/openai on same origin.
+   If that returns 404/failed and a client key exists via sessionStorage('OPENAI_KEY'), tries direct call (insecure).
+   This function returns the parsed OpenAI response object.
+*/
+async function callOpenAI(payload){
+  // prefer server proxy
+  try{
+    const prox = await fetch('/api/openai', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    if(prox.ok){
+      return await prox.json();
+    } else {
+      // if server returned 404 or CORS error, try fallback
+      console.warn('Proxy failed, status', prox.status);
+      // try fallback below
+    }
+  } catch(e){
+    console.warn('Proxy call error', e);
+  }
+
+  // FALLBACK: direct call from browser using sessionStorage key (for local testing ONLY)
+  const fallbackKey = sessionStorage.getItem('OPENAI_KEY');
+  if(!fallbackKey) throw new Error('No server proxy and no client OPENAI_KEY set. Run the provided Node proxy or set a key via "Set OpenAI Key" button.');
+
+  // build request for Chat Completions
+  const directResp = await fetch('https://api.openai.com/v1/chat/completions', {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'Authorization': 'Bearer ' + fallbackKey
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini', // or change to your preferred model
+      ...payload
+    })
+  });
+  if(!directResp.ok){
+    const text = await directResp.text();
+    throw new Error('OpenAI direct error: ' + text);
+  }
+  return await directResp.json();
+}
+
+/* ========== Utility & key prompt ========== */
+function escapeHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function promptSetKey(){
+  const k = prompt('Paste your OpenAI API key here for quick local testing (not secure). For production use the server proxy. Leave blank to cancel.');
+  if(k){ sessionStorage.setItem('OPENAI_KEY', k.trim()); showToast('Key saved to session (local test only)', 'success'); }
+}
+
+/* ========== Optional use: generate branches using /api/openai server directly with a JSON prompt ========== */
+async function generateBranches(){ return generateAIBranches(); }
+
+/* ========== Startup ========== */
+(function init(){
+  // prefill mmTopic select with available topics
+  const sel = document.getElementById('mmTopic');
+  sel.innerHTML = '<option value="">Choose topic</option>';
+  Object.keys(subjectTopics).forEach(sub=>{
+    subjectTopics[sub].forEach(t=>{
+      const o = document.createElement('option'); o.value = t; o.textContent = `${sub} - ${t}`;
+      sel.appendChild(o);
+    });
+  });
+})();
+</script>
+</body>
+</html>
