@@ -2,115 +2,291 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>STERLA</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
-html,body{height:100%;}
-body{
-background:linear-gradient(135deg,#d9e6ff,#ffffff);
-font-size:16px;
-overflow:hidden;
-}
-#loginPage{width:100vw;height:100vh;display:flex;justify-content:center;align-items:center;padding:30px;}
-.login-container {
-width: 300px;
-margin: 120px auto;
-padding: 25px;
-border-radius: 10px;
-background: #fafafa;
-box-shadow: 0 0 10px rgba(0,0,0,0.1);
-text-align: center;
-}
-.login-container input {
-width: 90%;
-padding: 10px;
-margin: 10px 0;
-border-radius: 8px;
-border: 1px solid #888;
-}
-.login-container button {
-padding: 10px 40px;
-margin-top: 10px;
-border: none;
-border-radius: 8px;
-background: #1976d2;
-color: white;
-cursor: pointer;
-}
-#loginMessage {
-margin-top: 10px;
-font-size: 14px;
-}
-#appPage{
-display:none;
-width:100%;
-height:100vh;
-display:flex;
-overflow:hidden;
-background:linear-gradient(135deg,#d9e6ff,#ffffff);
-}
-.glass{background:rgba(255,255,255,0.35);backdrop-filter:blur(12px);border-radius:18px;border:1px solid rgba(255,255,255,0.4);box-shadow:0 4px 20px rgba(0,0,0,0.1);}
-#sidebar{width:260px;height:100vh;background:#1346b5c4;color:white;padding:25px;position:fixed;left:0;top:0;overflow:auto;}
-#sidebar h2{font-size:26px;margin-bottom:25px;}
-.nav-btn{width:100%;padding:12px;margin:8px 0;background:rgba(255,255,255,0.2);border:none;border-radius:12px;text-align:left;color:white;cursor:pointer;font-size:16px;transition:0.3s;}
-.nav-btn:hover{background:rgba(255,255,255,0.35);}
-#main{margin-left:280px;padding:30px;width:calc(100% - 280px);height:100vh;overflow-y:auto;}
-.page{display:none;}
-.active{display:block;}
-#welcomeBox{width:100%;max-width:1100px;padding:30px;margin-top:25px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;}
-#welcomeBox img{width:160px;filter: invert(25%);margin-top:10px;}
-.subject-card{padding:18px;margin:12px;background:white;border-radius:15px;display:inline-block;cursor:pointer;width:150px;text-align:center;border:2px solid #1346b5;transition:0.3s;vertical-align:top;}
-.subject-card:hover{background:#1346b5;color:white;}
-.topic-btn{padding:12px;border-radius:12px;background:#1346b5;color:white;border:none;margin:5px;cursor:pointer;}
-.output-box{margin-top:20px;padding:25px;border-radius:15px;background:white;min-height:200px;}
-.announce{background:white;padding:12px;border-radius:12px;margin:10px 0;}
-.teacher-only{display:none;}
-.mindmap{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;padding:20px;min-height:300px;position:relative;}
-.flow-box {
-position:absolute;
-width:180px;
-padding:15px;
-background:#ffffff;
-border:2px solid #1445b5;
-border-radius:10px;
-text-align:center;
-font-weight:600;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-.flow-line {
-stroke:#1445b5;
-stroke-width:3;
-}
-.flow-arrow {
-fill:#1445b5;
-}
-#chatBox{border:1px solid #ccc;padding:15px;height:400px;overflow-y:auto;border-radius:12px;margin-bottom:10px;background:white;}
-#chatBox div{margin-bottom:8px;}
-#chatInput{width:80%;padding:10px;border-radius:8px;border:1px solid #ccc;}
-#chatBtn{padding:10px;border-radius:8px;background:#1346b5;color:white;border:none;cursor:pointer;}
-#chatBtn:hover{background:#1d3270;}
-@media (max-width:800px){
-#sidebar{display:none;}
-#main{margin-left:0;width:100%;}
-#welcomeBox{padding:18px;}
-}
+  /* Base theme colors */
+  :root {
+    --black: #121212;
+    --light-blue: #574b90;
+    --light-purple: #8a7cc1;
+    --white: #f0f0f0;
+    --accent: #0099ff;
+    --background-gradient: linear-gradient(135deg, var(--light-blue), var(--light-purple));
+  }
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  html, body {
+    height: 100%;
+    background: var(--black);
+    color: var(--white);
+  }
+  #loginPage {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background-gradient);
+  }
+  .login-container {
+    background: rgba(255 255 255 / 0.1);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(138,124,193,0.5);
+    width: 320px;
+    text-align: center;
+    color: var(--white);
+  }
+  .login-container h2 {
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: 28px;
+  }
+  .login-container input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255 255 255 / 0.15);
+    color: var(--white);
+    font-size: 16px;
+  }
+  .login-container input::placeholder {
+    color: rgba(255 255 255 / 0.7);
+  }
+  .login-container button {
+    padding: 12px 0;
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    color: var(--white);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  .login-container button:hover {
+    background: #0077cc;
+  }
+  #loginMessage {
+    margin-top: 10px;
+    font-size: 14px;
+    height: 18px;
+  }
+
+  /* APP PAGE */
+  #appPage {
+    display: none;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    background: var(--background-gradient);
+  }
+  #sidebar {
+    width: 260px;
+    background: var(--light-blue);
+    padding: 30px 20px;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #sidebar h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+  }
+  .nav-btn {
+    background: transparent;
+    color: var(--white);
+    border: none;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 18px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .nav-btn:hover {
+    background: var(--light-purple);
+  }
+  #main {
+    flex-grow: 1;
+    padding: 36px 40px;
+    overflow-y: auto;
+    color: var(--white);
+  }
+  .page {
+    display: none;
+  }
+  .page.active {
+    display: block;
+  }
+
+  /* Welcome Box */
+  #welcomeBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(138,124,193,0.3);
+    border-radius: 18px;
+    padding: 40px;
+    margin-bottom: 25px;
+  }
+  #welcomeBox h2 {
+    font-size: 36px;
+    max-width: 60%;
+  }
+  #welcomeBox p {
+    font-size: 20px;
+    margin-top: 12px;
+    max-width: 60%;
+  }
+  #welcomeBox img {
+    width: 180px;
+    filter: drop-shadow(0 0 6px rgba(0,0,0,0.4));
+  }
+
+  /* Subject Cards */
+  .subject-card {
+    padding: 20px;
+    margin: 15px 14px;
+    background: var(--black);
+    border-radius: 18px;
+    border: 2px solid var(--light-purple);
+    width: 170px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--white);
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  .subject-card:hover {
+    background: var(--light-purple);
+    color: var(--black);
+  }
+
+  /* Topic Buttons */
+  .topic-btn {
+    padding: 14px 20px;
+    margin: 8px 6px;
+    border-radius: 18px;
+    background: var(--light-purple);
+    color: var(--white);
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    user-select: none;
+    transition: background 0.3s ease;
+  }
+  .topic-btn:hover {
+    background: var(--accent);
+  }
+
+  /* Output Boxes */
+  .output-box {
+    background: rgba(255 255 255 / 0.15);
+    border-radius: 16px;
+    padding: 28px;
+    min-height: 260px;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .announce {
+    background: rgba(138,124,193,0.2);
+    padding: 14px 18px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+  }
+
+  /* Chat */
+  #chatBox {
+    background: rgba(255 255 255 / 0.15);
+    padding: 18px;
+    border-radius: 14px;
+    height: 430px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+  #chatBox div {
+    margin-bottom: 10px;
+  }
+  #chatInput {
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    width: 80%;
+    font-size: 18px;
+    background: rgba(255 255 255 / 0.15);
+    color: var(--white);
+  }
+  #chatInput::placeholder {
+    color: rgba(255 255 255 / 0.6);
+  }
+  #chatBtn {
+    background: var(--accent);
+    border: none;
+    color: white;
+    font-size: 18px;
+    padding: 15px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: 600;
+  }
+  #chatBtn:hover {
+    background: #0077cc;
+  }
+
+  /* Mindmap */
+  #flowArea {
+    background: rgba(255 255 255 / 0.15);
+    border-radius: 14px;
+    border: 2px solid var(--light-purple);
+  }
+  svg {
+    user-select: none;
+  }
+
+  /* Toast feedback */
+  .toast {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 40px;
+    padding: 14px 26px;
+    border-radius: 14px;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    z-index: 9999;
+    animation: fadein 0.3s, fadeout 0.3s 1.2s;
+  }
+  .toast-success {background: #28a745;}
+  .toast-error {background: #dc3545;}
+  @keyframes fadein {from {opacity: 0;} to {opacity: 1;}}
+  @keyframes fadeout {from {opacity: 1;} to {opacity: 0;}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN PAGE -->
 <div id="loginPage">
   <div class="login-container">
     <h2>Login</h2>
-    <input type="text" id="username" placeholder="Enter Username" />
-    <input type="password" id="password" placeholder="Enter Password" />
+    <input type="email" id="email" placeholder="Enter Email" />
+    <input type="password" id="passcode" placeholder="Enter Passcode" />
     <button onclick="login()">Login</button>
     <p id="loginMessage"></p>
   </div>
 </div>
 
-<!-- APP PAGE -->
 <div id="appPage">
   <div id="sidebar">
     <h2>STERLA</h2>
@@ -126,7 +302,7 @@ fill:#1445b5;
 
   <div id="main">
     <div id="homePage" class="page active">
-      <h1 id="welcomeUser"></h1>
+      <h1 id="welcomeUser">Welcome to STERLA</h1>
       <div id="welcomeBox" class="glass">
         <div>
           <h2>Your learning companion</h2>
@@ -134,15 +310,13 @@ fill:#1445b5;
         </div>
         <img src="https://cdn-icons-png.flaticon.com/512/2942/2942943.png" alt="school icon" />
       </div>
-      <div style="margin-top:18px;">
+      <div style="margin-top: 18px;">
         <h3>Quick Subjects</h3>
         <div id="subjectsQuick"></div>
       </div>
     </div>
 
-    <div id="dashboard" class="page">
-      <h1>Dashboard</h1>
-      <h2>Announcements</h2>
+    <div id="dashboard" class="page"><h1>Dashboard</h1><h2>Announcements</h2>
       <div class="announce">• Chemistry worksheet due Monday</div>
       <div class="announce">• Biology test next Friday</div>
       <div class="announce">• Math homework submission closes tonight</div>
@@ -163,7 +337,7 @@ fill:#1445b5;
       <label for="mmTopic">Select Topic:</label>
       <select id="mmTopic"><option value="">Choose topic</option></select>
       <button onclick="loadFlowchart()">Generate Flowchart</button>
-      <div id="flowArea" style="width:100%;height:600px;border:1px solid #ccc;border-radius:10px;background:white;margin-top:20px;position:relative;overflow:auto;">
+      <div id="flowArea" style="width:100%;height:600px;border-radius:14px;border:2px solid var(--light-purple);background: rgba(255 255 255 / 0.15);margin-top:20px;position:relative;overflow:auto;">
         <svg id="flowSVG" width="2000" height="2000" style="position:absolute;top:0;left:0;"></svg>
       </div>
     </div>
@@ -177,7 +351,7 @@ fill:#1445b5;
       <h1>Worksheet</h1>
       <div class="output-box" id="wsOutput"></div>
     </div>
-
+    
     <div id="managePage" class="page teacher-only">
       <h1>Teacher Panel</h1>
       <p>Here you can upload worksheets, add quizzes, view submissions, manage announcements.</p>
@@ -193,455 +367,287 @@ fill:#1445b5;
 </div>
 
 <script>
-// Elements
-const loginPage = document.getElementById("loginPage");
-const appPage = document.getElementById("appPage");
-const welcomeUser = document.getElementById("welcomeUser");
-const subjectsQuick = document.getElementById("subjectsQuick");
-const topicTitle = document.getElementById("topicTitle");
-const topicButtons = document.getElementById("topicButtons");
-const chatBtn = document.getElementById("chatBtn");
-const chatInput = document.getElementById("chatInput");
-const chatBox = document.getElementById("chatBox");
-const mmTopicSelect = document.getElementById("mmTopic");
-const svgContainer = document.getElementById("flowSVG");
-const diagramTitle = document.querySelector("#mindmap h2");
-
-// State
-let selectedSubject = "";
-let chosenTopic = "";
-
-// Login
-function login() {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const msg = document.getElementById("loginMessage");
-  if (username === "" || password === "") {
-    msg.textContent = "Please enter both username and password.";
-    msg.style.color = "red";
-    return;
-  }
-  if (username === "admin" && password === "1234") {
-    msg.textContent = "Login successful!";
-    msg.style.color = "green";
-    loginPage.style.display = "none";
-    appPage.style.display = "flex";
-  } else {
-    msg.textContent = "Invalid credentials. Try again.";
-    msg.style.color = "red";
-  }
-}
-
-// Subject Topics hardcoded
-const subjectTopics = {
-  English: ["Grammar","Formal Letter","Speech","Prose"],
-  Math: ["Algebra","Linear Equations","Mensuration"],
-  Science: ["Reproduction in Animals","Sound","Electricity"],
-  "Social Science": ["1857 Revolt","Resources","Judiciary"],
-  Hindi: ["Vyakaran","Patra Lekhan"],
-  Computer: ["HTML","AI Basics"],
-  Sanskrit: ["Shabd Roop","Dhatu Roop"],
-  French: ["French Grammar","Culture"],
-  ICT: ["Networks","Cybersecurity"],
-};
-
-// Flow data sample for mindmap
-const flowData = {
-  Photosynthesis:[
-    "Sunlight absorbed",
-    "Water enters leaf",
-    "CO₂ taken in",
-    "Glucose produced",
-    "Oxygen released"
-  ],
-  "Water Cycle":[
-    "Evaporation",
-    "Condensation",
-    "Cloud Formation",
-    "Precipitation",
-    "Collection"
-  ],
-  "Cell Division":[
-    "Interphase",
-    "Prophase",
-    "Metaphase",
-    "Anaphase",
-    "Telophase + Cytokinesis"
-  ]
-};
-
-/* ===== QUIZ BANK (Multiple Choice) ===== */
-const quizBank = {
-"Grammar":[
-{ q:"Which of the following is a noun?", options:["run","dog","quickly","beautiful"], answer:"dog" },
-{ q:"Identify the verb in the sentence.", options:["is","happy","table","red"], answer:"is" },
-{ q:"What is an adjective?", options:["A describing word","A doing word","A place","A person"], answer:"A describing word" }
-],
-"Formal Letter":[
-{q:"Which salutation is correct?", options:["Dear Sir","Hi buddy","Hey","Yo"], answer:"Dear Sir"},
-{q:"Where does the date appear?", options:["Top right","Bottom left","Middle","Nowhere"], answer:"Top right"}
-],
-"Speech":[
-{q:"Opening of speech should be?", options:["Attention grabber","Random word","Slang","Silent start"], answer:"Attention grabber"},
-{q:"How to conclude speech?", options:["Summarize & end memorably","Stop abruptly","Say random joke","Ignore"], answer:"Summarize & end memorably"}
-],
-"Prose":[
-{q:"Prose is written in?", options:["Ordinary grammatical structure","Verse form","Poetry","Haiku"], answer:"Ordinary grammatical structure"},
-{q:"Does prose contain verses?", options:["No","Yes","Sometimes","Only poems"], answer:"No"}
-],
-"Algebra":[
-{q:"Solve x + 5 = 12", options:["x=7","x=17","x=5","x=12"], answer:"x=7"},
-{q:"Simplify 2x + 3x", options:["5x","6x","x","2x"], answer:"5x"}
-],
-"Linear Equations":[
-{q:"Solve 2x + 3 = 7", options:["x=2","x=5","x=3","x=1"], answer:"x=2"},
-{q:"Equation y = 2x + 1 forms?", options:["Straight line","Curve","Circle","Random"], answer:"Straight line"}
-],
-"Mensuration":[
-{q:"Find area of rectangle 5x7 cm?", options:["35","12","57","None"], answer:"35"},
-{q:"Volume of cube side 4cm?", options:["64","16","12","8"], answer:"64"}
-],
-"Reproduction in Animals":[
-{q:"Two types of reproduction?", options:["Sexual & Asexual","Only sexual","Only asexual","None"], answer:"Sexual & Asexual"},
-{q:"Fertilization occurs in?", options:["Animals & plants","Only animals","Only plants","None"], answer:"Animals & plants"}
-],
-"Sound":[
-{q:"Sound is?", options:["Vibration","Color","Light","Force"], answer:"Vibration"},
-{q:"Speed of sound depends on?", options:["Medium","Color","Shape","Time"], answer:"Medium"}
-],
-"Electricity":[
-{q:"Ohm's law formula?", options:["V=IR","V+IR","VI=R","None"], answer:"V=IR"},
-{q:"Series circuit has?", options:["Same current","Same voltage","Both","None"], answer:"Same current"}
-],
-"1857 Revolt":[
-{q:"First War of Independence year?", options:["1857","1757","1947","1800"], answer:"1857"},
-{q:"Leader of revolt?", options:["Mangal Pandey","Nehru","Gandhi","Tipu Sultan"], answer:"Mangal Pandey"}
-],
-"Resources":[
-{q:"Renewable resource example?", options:["Solar energy","Coal","Oil","Gas"], answer:"Solar energy"},
-{q:"Non-renewable resource?", options:["Coal","Sunlight","Wind","Water"], answer:"Coal"}
-],
-"Judiciary":[
-{q:"Highest court in India?", options:["Supreme Court","High Court","District Court","None"], answer:"Supreme Court"},
-{q:"Independent judiciary protects?", options:["Rights","Money","Food","Vehicles"], answer:"Rights"}
-],
-"Vyakaran":[
-{q:"Sandhi is?", options:["Joining of words","Verb","Noun","Adjective"], answer:"Joining of words"},
-{q:"Correct gender usage?", options:["Masculine/Feminine","Singular only","Plural only","None"], answer:"Masculine/Feminine"}
-],
-"Patra Lekhan":[
-{q:"Formal letter closing?", options:["Yours sincerely","Bye","Cheers","Later"], answer:"Yours sincerely"},
-{q:"Should slang be used?", options:["No","Yes","Sometimes","Optional"], answer:"No"}
-],
-"HTML":[
-{q:"HTML stands for?", options:["HyperText Markup Language","HighText Modern Language","Hyper Tool Markup Language","None"], answer:"HyperText Markup Language"},
-{q:"Tag for paragraph?", options:["<p>","<h1>","<img>","<a>"], answer:"<p>"}
-],
-"AI Basics":[
-{q:"AI stands for?", options:["Artificial Intelligence","Automated Input","Artificial Interface","None"], answer:"Artificial Intelligence"},
-{q:"Narrow AI example?", options:["Chatbot","Self-driving car","Human brain","All"], answer:"Chatbot"}
-],
-"Shabd Roop":[
-{q:"Shabd Roop studies?", options:["Word forms","Colors","Animals","Numbers"], answer:"Word forms"},
-{q:"Helps in?", options:["Sentence formation","Cooking","Music","Painting"], answer:"Sentence formation"}
-],
-"Dhatu Roop":[
-{q:"Dhatu Roop is about?", options:["Verb roots","Nouns","Adjectives","Adverbs"], answer:"Verb roots"},
-{q:"Used for?", options:["Sentence construction","Painting","Drawing","Music"], answer:"Sentence construction"}
-],
-"French Grammar":[
-{q:"French grammar includes?", options:["Articles, nouns, verbs","Colors","Music","Dance"], answer:"Articles, nouns, verbs"},
-{q:"Tense example?", options:["Present","Past","Future","All"], answer:"All"}
-],
-"Culture":[
-{q:"French culture includes?", options:["Traditions, food, art","Cars","Technology","Animals"], answer:"Traditions, food, art"},
-{q:"Helps in?", options:["Communication","Sports","Mathematics","Physics"], answer:"Communication"}
-],
-"Networks":[
-{q:"Network connects?", options:["Computers","People","Books","Animals"], answer:"Computers"},
-{q:"Purpose?", options:["Share data","Cook","Sleep","Run"], answer:"Share data"}
-],
-"Cybersecurity":[
-{q:"Cybersecurity protects?", options:["Computers & networks","Plants","Animals","Buildings"], answer:"Computers & networks"},
-{q:"Threat example?", options:["Hacking","Cooking","Running","Painting"], answer:"Hacking"}
-]
-};
-
-/* ====== WORKSHEET BANK ===== */
-const wsBank = {
-"Grammar":["1. Write 5 nouns.","2. Write 5 verbs.","3. Identify parts of speech.","4. Form 5 adverbs.","5. Write 3 complex sentences."],
-"Formal Letter":["1. Write a formal letter to principal.","2. Draft letter to bank manager.","3. Compose letter to editor.","4. Draft complaint letter.","5. Write letter to teacher."],
-"Speech":["1. Write a 2-minute speech on pollution.","2. Speech on importance of education.","3. Speech on health and hygiene.","4. Speech on computer usage.","5. Speech on favorite hobby."],
-"Prose":["1. Read passage & answer questions.","2. Summarize paragraph.","3. Identify main idea.","4. Write continuation.","5. Identify characters."],
-"Algebra":["1. Solve 5x + 3 = 18","2. Factor x^2 + 7x + 12","3. Simplify 4x + 9x","4. Solve 3x - 8 = 10","5. Form expression for sum of 2 numbers."],
-"Linear Equations":["1. Solve 2x + 5 = 15","2. Solve 3x - y = 6","3. Draw line y = x + 2","4. Solve 4x + 3y = 12","5. Apply elimination method."],
-"Mensuration":["1. Area of rectangle 5x7 cm","2. Perimeter of square 6 cm","3. Volume of cube 4 cm","4. Surface area of cylinder r=3,h=7","5. Circumference of circle r=5cm"],
-"Reproduction in Animals":["1. Draw human reproductive system","2. Explain fertilization","3. Define binary fission","4. Define budding","5. List types of reproduction"],
-"Sound":["1. Draw wave diagram","2. Define frequency","3. Define amplitude","4. Explain echo","5. Speed of sound in water"],
-"Electricity":["1. Draw simple circuit","2. Ohm’s law calculation","3. Identify series circuit","4. Identify parallel circuit","5. Name safety devices"],
-"1857 Revolt":["1. List causes","2. Name key leaders","3. Write main events","4. Outcome of revolt","5. Lessons learned"],
-"Resources":["1. List renewable resources","2. List non-renewable resources","3. Explain conservation","4. Importance of water conservation","5. Forest conservation examples"],
-"Judiciary":["1. Write role of Supreme Court","2. High Court duties","3. Lower court examples","4. Judge responsibilities","5. Importance of independent judiciary"],
-"Vyakaran":["1. Examples of Sandhi","2. Examples of Samas","3. Correct gender usage","4. Singular/dual/plural examples","5. Correct tense sentences"],
-"Patra Lekhan":["1. Write formal letter to principal","2. Write informal letter to friend","3. Include sender & receiver","4. Use proper salutation","5. End with signature"],
-"HTML":["1. Create simple HTML page","2. Add headings & paragraphs","3. Insert image","4. Add hyperlink","5. Create list items"],
-"AI Basics":["1. List types of AI","2. Example of narrow AI","3. Example of general AI","4. AI application in healthcare","5. AI in education"],
-"Shabd Roop":["1. Write singular/plural forms","2. Change gender of words","3. Correct case","4. Form words for verbs","5. Use in sentences"],
-"Dhatu Roop":["1. Write root verb forms","2. Present tense","3. Past tense","4. Future tense","5. Make sentences using verb"],
-"French Grammar":["1. Write 5 nouns","2. Write 5 adjectives","3. Conjugate 3 verbs","4. Form simple sentences","5. Translate sentences"],
-"Culture":["1. List French festivals","2. Describe French food","3. Famous French musicians","4. Social etiquette","5. Daily life in France"],
-"Networks":["1. Draw simple network diagram","2. Explain types of networks","3. Define LAN & WAN","4. Identify network devices","5. Network examples"],
-"Cybersecurity":["1. List common cyber threats","2. Define firewall","3. Explain antivirus software","4. Safety tips online","5. Case study of hacking"]
-};
-
-
-// AI bank minimal example for fallback chatbot answers
-const aiBank = {
-  "Grammar":[{q:"noun",a:"A noun is a person, place, thing, or idea."},{q:"verb",a:"A verb is an action or state of being."}],
-  "Formal Letter":[{q:"formal",a:"A formal letter is written in a professional tone for official purposes."}],
-  "Speech":[{q:"speech",a:"A speech is a talk delivered to an audience with a clear structure."}],
-  "Prose":[{q:"prose",a:"Prose is ordinary written language without metrical structure."}],
-  "Algebra":[{q:"solve",a:"To solve x+5=12 subtract 5 from both sides so x=7."}],
-  "Linear Equations":[{q:"linear",a:"A linear equation has variables to the power 1 and graphs as a straight line."}],
-  "Mensuration":[{q:"area",a:"Mensuration includes area, perimeter and volume formulas for shapes."}],
-  "Reproduction in Animals":[{q:"reproduction",a:"Reproduction produces new organisms; types include sexual and asexual."}],
-  "Sound":[{q:"sound",a:"Sound is a vibration that travels through a medium."}],
-  "Electricity":[{q:"electricity",a:"Electricity is the flow of electric charge; V = IR (Ohm's law)."}],
-  "1857 Revolt":[{q:"1857",a:"The 1857 Revolt was a large-scale uprising against British rule in India."}],
-  "Resources":[{q:"resources",a:"Resources are materials (renewable or non-renewable) used by humans."}],
-  "Judiciary":[{q:"judiciary",a:"The judiciary interprets and applies the law through courts."}],
-  "Vyakaran":[{q:"vyakaran",a:"Vyakaran means grammar in Hindi; it covers rules of language."}],
-  "Patra Lekhan":[{q:"patra",a:"Patra Lekhan is letter-writing in Hindi, formal or informal formats."}],
-  "HTML":[{q:"html",a:"HTML structures web content using tags like <p>, <h1>, <a>."}],
-  "AI Basics":[{q:"ai",a:"AI is the simulation of human intelligence in machines."}],
-  "Shabd Roop":[{q:"shabd",a:"Shabd Roop studies different forms of words in Sanskrit."}],
-  "Dhatu Roop":[{q:"dhatu",a:"Dhatu Roop deals with verb root forms and their conjugations."}],
-  "French Grammar":[{q:"french",a:"French grammar covers articles, nouns, adjectives, and verb conjugations."}],
-  "Culture":[{q:"culture",a:"French culture includes food, art, festivals, and social etiquette."}],
-  "Networks":[{q:"networks",a:"Networks connect devices so they can share data and resources."}],
-  "Cybersecurity":[{q:"cyber",a:"Cybersecurity protects systems and data from digital threats."}]
-};
-
-
-
-// Navigation and UI
-function showPage(p){
-  document.querySelectorAll(".page").forEach(el=>el.classList.remove("active"));
-  const el=document.getElementById(p);
-  if(el) el.classList.add("active");
-  if(p==="subjectsPage") loadSubjects();
-  if(p==="topicPage") renderTopicButtons();
-  if(p==="mindmap") populateMindmapTopics();
-  if(p==="quizPage") loadQuiz();
-  if(p==="wsPage") loadWorksheet();
-}
-
-function loadSubjects() {
-  const box=document.getElementById("subjectsContainer");
-  box.innerHTML = "";
-  subjectsQuick.innerHTML = "";
-  for(const s in subjectTopics){
-    box.innerHTML += `<div class="subject-card" onclick="selectSubject('${s}')">${s}</div>`;
-    subjectsQuick.innerHTML += `<button class="topic-btn" onclick="selectSubject('${s}')">${s}</button>`;
-  }
-}
-
-function selectSubject(sub){
-  selectedSubject=sub;
-  chosenTopic="";
-  showPage("topicPage");
-  topicTitle.innerText= sub + " Topics";
-}
-
-function renderTopicButtons(){
-  if(!selectedSubject) return;
-  const topicButtonsDiv = document.getElementById("topicButtons");
-  const topics = subjectTopics[selectedSubject];
-  let html = "";
-  topics.forEach(tp=>{
-    html += `<button class="topic-btn" onclick="setTopic('${tp}')">${tp}</button>`;
-  });
-  topicButtonsDiv.innerHTML = html;
-}
-
-function setTopic(tp){
-  chosenTopic = tp;
-  const prevToast = document.getElementById("topicToast");
-  if(prevToast) prevToast.remove();
-  const toast = document.createElement("div");
-  toast.id = "topicToast";
-  toast.style.position = "fixed";
-  toast.style.top = "20px";
-  toast.style.right = "20px";
-  toast.style.background = "#1346b5";
-  toast.style.color = "white";
-  toast.style.padding = "10px 14px";
-  toast.style.borderRadius = "8px";
-  toast.style.boxShadow = "0 6px 18px rgba(0,0,0,0.15)";
-  toast.innerText = "Topic selected: " + tp;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 1500);
-}
-
-// Mindmap dropdown population
-function populateMindmapTopics(){
-  mmTopicSelect.innerHTML = '<option value="">Choose topic</option>';
-  Object.keys(flowData).forEach(topic=>{
-    const opt = document.createElement("option");
-    opt.value = topic;
-    opt.textContent = topic;
-    mmTopicSelect.appendChild(opt);
-  });
-}
-
-// Load flowchart for selected topic
-function loadFlowchart(){
-  const topic = mmTopicSelect.value;
-  if(!topic){
-    alert("Please select a topic first.");
-    return;
-  }
-  const data = flowData[topic];
-  if(!data){
-    alert("No data for topic.");
-    return;
-  }
-  svgContainer.innerHTML = "";
-  diagramTitle.textContent = "Flowchart for " + topic;
-
-  const boxW = 250, boxH = 70, gapV = 60, startX = 200;
-
-  data.forEach((text, idx) => {
-    const y = idx * (boxH + gapV) + 20;
-    let rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    rect.setAttribute("x", startX);
-    rect.setAttribute("y", y);
-    rect.setAttribute("width", boxW);
-    rect.setAttribute("height", boxH);
-    rect.setAttribute("fill", "#bbdefb");
-    rect.setAttribute("stroke", "#0d47a1");
-    rect.setAttribute("rx", 10);
-    svgContainer.appendChild(rect);
-
-    let textElem = document.createElementNS("http://www.w3.org/2000/svg","text");
-    textElem.textContent = text;
-    textElem.setAttribute("x", startX + boxW/2);
-    textElem.setAttribute("y", y + boxH/2 + 5);
-    textElem.setAttribute("text-anchor", "middle");
-    textElem.setAttribute("font-size", "14");
-    textElem.setAttribute("font-family", "Arial");
-    svgContainer.appendChild(textElem);
-
-    if(idx < data.length - 1){
-      let line = document.createElementNS("http://www.w3.org/2000/svg","line");
-      line.setAttribute("x1", startX + boxW/2);
-      line.setAttribute("y1", y + boxH);
-      line.setAttribute("x2", startX + boxW/2);
-      line.setAttribute("y2", y + boxH + gapV - 20);
-      line.setAttribute("stroke", "#1445b5");
-      line.setAttribute("stroke-width", 3);
-      svgContainer.appendChild(line);
+  // Show popup for paid promotion on page load
+  window.onload = function() {
+    if(confirm("Do you want to see our paid promotion?")){
+      alert("Thank you for your interest! Visit our sponsor for awesome deals.");
     }
-  });
-}
+    loadSubjects();
+  };
 
-// Quiz
-function loadQuiz(){
-  const out = document.getElementById("quizOutput");
-  if(!chosenTopic){
-    out.innerHTML = "<p>Please select a topic first.</p>";
-    return;
+  const loginPage = document.getElementById("loginPage");
+  const appPage = document.getElementById("appPage");
+  const emailInput = document.getElementById("email");
+  const passcodeInput = document.getElementById("passcode");
+  const loginMsg = document.getElementById("loginMessage");
+  const subjectsQuick = document.getElementById("subjectsQuick");
+  const topicTitle = document.getElementById("topicTitle");
+  const topicButtons = document.getElementById("topicButtons");
+  const chatBtn = document.getElementById("chatBtn");
+  const chatInput = document.getElementById("chatInput");
+  const chatBox = document.getElementById("chatBox");
+  const mmTopicSelect = document.getElementById("mmTopic");
+  const svgContainer = document.getElementById("flowSVG");
+  const diagramTitle = document.querySelector("#mindmap h2");
+
+  let selectedSubject = "";
+  let chosenTopic = "";
+
+  function login() {
+    const email = emailInput.value.trim();
+    const passcode = passcodeInput.value.trim();
+    if(!email || !passcode){
+      loginMsg.textContent = "Please enter both email and passcode.";
+      loginMsg.style.color = "red";
+      return;
+    }
+    if(email === "admin@example.com" && passcode === "1234"){
+      loginMsg.textContent = "Login successful!";
+      loginMsg.style.color = "lightgreen";
+      loginPage.style.display = "none";
+      appPage.style.display = "flex";
+      welcomeUser.textContent = "Welcome, " + email;
+    } else {
+      loginMsg.textContent = "Invalid email or passcode.";
+      loginMsg.style.color = "red";
+    }
   }
-  const qArr = quizBank[chosenTopic];
-  if(!qArr){
-    out.innerHTML="<p>Quiz not available for this topic.</p>";
-    return;
+
+  function loadSubjects(){
+    const box = document.getElementById("subjectsContainer");
+    box.innerHTML = "";
+    subjectsQuick.innerHTML = "";
+    for(const sub in subjectTopics){
+      box.innerHTML += `<div class="subject-card" onclick="selectSubject('${sub}')">${sub}</div>`;
+      subjectsQuick.innerHTML += `<button class="topic-btn" onclick="selectSubject('${sub}')">${sub}</button>`;
+    }
   }
-  out.innerHTML = "";
-  qArr.forEach((qObj, idx)=>{
-    const div = document.createElement("div");
-    div.style.marginBottom="15px";
-    const qP = document.createElement("p");
-    qP.innerText = (idx+1) + ". " + qObj.q;
-    div.appendChild(qP);
-    qObj.options.forEach(opt=>{
-      const btn = document.createElement("button");
-      btn.className = "topic-btn";
-      btn.style.marginRight = "8px";
-      btn.style.marginTop = "6px";
-      btn.innerText = opt;
-      btn.onclick = () => checkAnswer(idx, opt);
-      div.appendChild(btn);
+
+  function selectSubject(sub){
+    selectedSubject = sub;
+    chosenTopic = "";
+    showPage("topicPage");
+    topicTitle.textContent = sub + " Topics";
+    renderTopicButtons();
+  }
+
+  function renderTopicButtons(){
+    if(!selectedSubject) return;
+    let html = "";
+    subjectTopics[selectedSubject].forEach(tp=>{
+      html+=`<button class="topic-btn" onclick="setTopic('${tp}')">${tp}</button>`;
     });
-    out.appendChild(div);
-  });
-}
-
-function checkAnswer(idx, selected){
-  const correct = quizBank[chosenTopic][idx].answer;
-  const toast = document.createElement("div");
-  toast.style.position="fixed";
-  toast.style.left="50%";
-  toast.style.transform="translateX(-50%)";
-  toast.style.bottom="30px";
-  toast.style.padding="12px 18px";
-  toast.style.borderRadius="8px";
-  toast.style.color="white";
-  toast.style.boxShadow="0 8px 24px rgba(0,0,0,0.2)";
-  if(selected === correct){
-    toast.style.background="#2ecc71";
-    toast.innerText = `✅ Correct! (${selected})`;
-  } else {
-    toast.style.background="#e74c3c";
-    toast.innerText = `❌ Wrong! Correct: ${correct}`;
+    topicButtons.innerHTML = html;
   }
-  document.body.appendChild(toast);
-  setTimeout(()=>toast.remove(),1400);
-}
-
-// Worksheet
-function loadWorksheet(){
-  const out = document.getElementById("wsOutput");
-  if(!chosenTopic){
-    out.innerHTML = "Please select a topic first.";
-    return;
+  
+  function setTopic(tp){
+    chosenTopic = tp;
+    populateMindmapTopics();
+    showPage("mindmap");
+    showToast("Topic selected: " + tp);
   }
-  const w = wsBank[chosenTopic];
-  if(!w){
-    out.innerHTML = "Worksheet not available for this topic.";
-    return;
+
+  function populateMindmapTopics(){
+    mmTopicSelect.innerHTML = '<option value="">Choose topic</option>';
+    if(selectedSubject && subjectTopics[selectedSubject]){
+      subjectTopics[selectedSubject].forEach(t=>{
+        let selected = (t === chosenTopic) ? "selected" : "";
+        mmTopicSelect.innerHTML += `<option value="${t}" ${selected}>${t}</option>`;
+      });
+    }
   }
-  out.innerHTML = `<ol>${w.map(item=>`<li style="margin-bottom:8px;">${item}</li>`).join("")}</ol>`;
-}
 
-// AI Chatbot
-function sendMessage(){
-  const msg = chatInput.value.trim();
-  if(!msg) return;
-  chatBox.innerHTML += `<div><b>You:</b> ${escapeHtml(msg)}</div>`;
-  chatInput.value = "";
-  let reply = "Sorry, I don't know the answer.";
-  if(chosenTopic && aiBank[chosenTopic]){
-    const topicQA = aiBank[chosenTopic];
-    const match = topicQA.find(obj => msg.toLowerCase().includes(obj.q.toLowerCase()));
-    reply = match ? match.a : topicQA[Math.floor(Math.random() * topicQA.length)].a;
-  } else if(!chosenTopic){
-    reply = "Select a topic first to get subject-specific answers.";
+  function loadFlowchart(){
+    const topic = mmTopicSelect.value || chosenTopic;
+    if(!topic){
+      alert("Please select a topic first.");
+      return;
+    }
+    const data = (detailedFlowData[selectedSubject] && detailedFlowData[selectedSubject][topic]) || [];
+    if(data.length === 0){
+      alert("No flowchart data for this topic.");
+      return;
+    }
+    svgContainer.innerHTML = "";
+    diagramTitle.textContent = selectedSubject + " - " + topic + " Flowchart";
+    const boxW = 250, boxH = 70, gapV = 60, startX = 150;
+    data.forEach((text,i) => {
+      const y = i*(boxH+gapV)+20;
+      let rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+      rect.setAttribute("x", startX); rect.setAttribute("y", y);
+      rect.setAttribute("width", boxW); rect.setAttribute("height", boxH);
+      rect.setAttribute("fill", "#574b90");
+      rect.setAttribute("stroke", "#8a7cc1");
+      rect.setAttribute("rx", "12"); rect.setAttribute("ry","12");
+      svgContainer.appendChild(rect);
+
+      let txt = document.createElementNS("http://www.w3.org/2000/svg","text");
+      txt.textContent = text;
+      txt.setAttribute("x", startX + boxW/2);
+      txt.setAttribute("y", y + boxH/2 + 6);
+      txt.setAttribute("font-family","Poppins, sans-serif");
+      txt.setAttribute("text-anchor","middle");
+      txt.setAttribute("fill","white");
+      txt.setAttribute("font-size","16");
+      svgContainer.appendChild(txt);
+
+      if(i<data.length-1){
+        let line = document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1", startX + boxW/2);
+        line.setAttribute("y1", y + boxH);
+        line.setAttribute("x2", startX + boxW/2);
+        line.setAttribute("y2", y + boxH + gapV - 24);
+        line.setAttribute("stroke", "#8a7cc1");
+        line.setAttribute("stroke-width", 4);
+        svgContainer.appendChild(line);
+      }
+    });
   }
-  chatBox.innerHTML += `<div><b>AI:</b> ${escapeHtml(reply)}</div>`;
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-function escapeHtml(text){
-  return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
 
-// Initialize UI and subjects quick buttons
-function init(){
-  loadSubjects();
-  showPage("homePage");
-}
-init();
+  // Quiz
+  const quizBank = {
+    English: {
+      Grammar: [
+        { q: "Which of the following is a noun?", options: ["run", "dog", "quickly", "beautiful"], answer: "dog" },
+        { q: "Identify the verb in the sentence.", options: ["is", "happy", "table", "red"], answer: "is" },
+        { q: "What is an adjective?", options: ["A describing word", "A doing word", "A place", "A person"], answer: "A describing word" },
+      ],
+      Formal Letter: [
+        {q:"Which salutation is correct?", options:["Dear Sir","Hi buddy","Hey","Yo"], answer:"Dear Sir"},
+        {q:"Where does the date appear?", options:["Top right","Bottom left","Middle","Nowhere"], answer:"Top right"}
+      ]
+    }
+  };
 
+  function loadQuiz(){
+    const out = document.getElementById("quizOutput");
+    if(!selectedSubject || !chosenTopic){
+      out.innerHTML = "<p>Please select a subject and topic first.</p>";
+      return;
+    }
+    const qArr = quizBank[selectedSubject]?.[chosenTopic];
+    if(!qArr){
+      out.innerHTML = "<p>No quiz available for this topic.</p>";
+      return;
+    }
+    out.innerHTML = "";
+    qArr.forEach((qObj, idx)=>{
+      const div = document.createElement("div");
+      div.style.marginBottom = "20px";
+      let qP = document.createElement("p");
+      qP.textContent = (idx+1) + ". " + qObj.q;
+      div.appendChild(qP);
+      qObj.options.forEach(opt=>{
+        let btn = document.createElement("button");
+        btn.className = "topic-btn";
+        btn.innerText = opt;
+        btn.style.marginRight = "12px";
+        btn.onclick = () => checkAnswer(idx,opt);
+        div.appendChild(btn);
+      });
+      out.appendChild(div);
+    });
+  }
+
+  function checkAnswer(idx, selected){
+    const correct = quizBank[selectedSubject][chosenTopic][idx].answer;
+    const toast = document.createElement("div");
+    toast.className = "toast " + (selected === correct ? "toast-success":"toast-error");
+    toast.textContent = selected === correct ? `✅ Correct! (${selected})` : `❌ Wrong! Correct: ${correct}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 1600);
+  }
+
+  // Worksheet bank example
+  const wsBank = {
+    English: {
+      Grammar: [
+        "Write 5 nouns.",
+        "Write 5 verbs.",
+        "Identify parts of speech in a sentence.",
+        "Form 5 adverbs.",
+        "Write 3 complex sentences."
+      ],
+      Formal Letter: [
+        "Write a formal letter to the principal.",
+        "Draft a letter to bank manager.",
+        "Compose a letter to editor.",
+        "Draft a complaint letter.",
+        "Write a letter to teacher."
+      ]
+    }
+  };
+
+  function loadWorksheet(){
+    const out = document.getElementById("wsOutput");
+    if(!selectedSubject || !chosenTopic){
+      out.innerHTML = "Please select a subject and topic first.";
+      return;
+    }
+    const w = wsBank[selectedSubject]?.[chosenTopic];
+    if(!w){
+      out.innerHTML = "Worksheet not available for this topic.";
+      return;
+    }
+    out.innerHTML = "<ol>" + w.map(i=>`<li>${i}</li>`).join("") + "</ol>";
+  }
+
+  // AI Chat with default answers
+  const aiBank = {
+    Grammar: [
+      {q:"noun",a:"A noun is a person, place, thing, or idea."},
+      {q:"verb",a:"A verb is an action or state of being."}
+    ],
+    Formal Letter:[
+      {q:"formal",a:"A formal letter is written in a professional and polite tone."}
+    ],
+    Speech:[
+      {q:"speech",a:"A speech is a structured talk delivered to an audience."}
+    ],
+  };
+
+  chatBtn.onclick = sendMessage;
+  
+  function sendMessage(){
+    const msg = chatInput.value.trim().toLowerCase();
+    if(!msg) return;
+    chatBox.innerHTML += `<div><b>You:</b> ${escapeHtml(msg)}</div>`;
+    chatInput.value = "";
+    let reply = "Sorry, I don't have an answer for that. Please select a topic and ask related questions.";
+    if(chosenTopic && aiBank[chosenTopic]){
+      const matched = aiBank[chosenTopic].find(obj=>msg.includes(obj.q));
+      reply = matched ? matched.a : "Please ask a specific question related to " + chosenTopic + ".";
+    } else if(!chosenTopic){
+      reply = "Please select a topic to chat about.";
+    }
+    chatBox.innerHTML += `<div><b>AI:</b> ${escapeHtml(reply)}</div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function escapeHtml(text){
+    return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  function showPage(p){
+    document.querySelectorAll(".page").forEach(el=>el.classList.remove("active"));
+    const el = document.getElementById(p);
+    if(el) el.classList.add("active");
+    if(p==="subjectsPage") loadSubjects();
+    if(p==="topicPage") renderTopicButtons();
+    if(p==="mindmap") {
+      populateMindmapTopics();
+      // Automatically select topic if already chosen
+      if(chosenTopic) mmTopicSelect.value = chosenTopic;
+    }
+    if(p==="quizPage") loadQuiz();
+    if(p==="wsPage") loadWorksheet();
+  }
+
+  // Initialize small UI
+  (function init(){
+    showPage("loginPage");
+  })();
 </script>
+
 </body>
 </html>
