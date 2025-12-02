@@ -126,15 +126,59 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0b0d 0%, #0f
 
 <script>
 // ====== DATA ======
-let userName = null, userRole = null, selectedSubject = '', chosenTopic = '';
+<script>
+let userName = null;
+let userRole = null;
+let selectedSubject = '';
+let chosenTopic = '';
+
+function onLogin(guest=false){
+    const msg = document.getElementById('loginMessage');
+    msg.textContent = '';
+    
+    if(!guest){
+        const role = document.getElementById('roleSelect').value;
+        if(!role){ 
+            msg.textContent = 'Select Student or Teacher';
+            return; 
+        }
+        userName = role + ' User';
+        userRole = role;
+    } else {
+        userName = 'Guest';
+        userRole = 'Guest';
+    }
+
+    // Hide login page, show app
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('appPage').style.display = 'flex';
+    
+    // Update user name
+    document.getElementById('welcomeUser').innerText = userName;
+    
+    // Load quick subjects
+    loadSubjects();
+}
+
+// Load subjects for homepage
 const subjects = ["Grammar","Formal Letter","Speech","Prose","Algebra","Linear Equations","Mensuration","Reproduction in Animals","Sound","Electricity","1857 Revolt","Resources","Judiciary","Vyakaran","Patra Lekhan","HTML","AI Basics","Shabd Roop","Dhatu Roop","French Grammar","Culture","Networks","Cybersecurity"];
-const topics = {
-  "Grammar":["Grammar"],"Formal Letter":["Formal Letter","Patra Lekhan"],"Speech":["Speech"],"Prose":["Prose"],"Algebra":["Algebra"],"Linear Equations":["Linear Equations"],"Mensuration":["Mensuration"],
-  "Reproduction in Animals":["Reproduction in Animals"],"Sound":["Sound"],"Electricity":["Electricity"],"1857 Revolt":["1857 Revolt"],"Resources":["Resources"],"Judiciary":["Judiciary"],"Vyakaran":["Vyakaran"],"Patra Lekhan":["Patra Lekhan"],
-  "HTML":["HTML"],"AI Basics":["AI Basics"],"Shabd Roop":["Shabd Roop"],"Dhatu Roop":["Dhatu Roop"],"French Grammar":["French Grammar"],"Culture":["Culture"],"Networks":["Networks"],"Cybersecurity":["Cybersecurity"]
-};
 
-
+function loadSubjects(){
+    const quick = document.getElementById('subjectsQuick');
+    quick.innerHTML = '';
+    subjects.forEach(sub => {
+        const btn = document.createElement('button');
+        btn.className = 'subject-card';
+        btn.innerText = sub;
+        btn.onclick = () => {
+            selectedSubject = sub;
+            // Automatically navigate to topics page
+            const topicsBtn = document.querySelector('[data-page="topicPage"]');
+            if(topicsBtn) topicsBtn.click();
+        };
+        quick.appendChild(btn);
+    });
+}
 const quizBank = {
 "Grammar":[
 { q:"Which of the following is a noun?", options:["run","dog","quickly","beautiful"], answer:"dog" },
