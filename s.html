@@ -287,20 +287,26 @@ function navigate(e){
 }
 
 /* ========== Login ========== */
-function onLogin(guest=false){
+/* ========== Login ========== */
+function onLogin(){
   const email = document.getElementById('email').value.trim();
   const pass = document.getElementById('passcode').value.trim();
   const msg = document.getElementById('loginMessage');
   msg.textContent = '';
-  if(!guest && (!email || !pass)){
-    msg.textContent = 'Enter email and passcode or click "Continue as Guest".';
+
+  // Require both fields
+  if(!email || !pass){
+    msg.textContent = 'Please enter both email and password.';
     return;
   }
-  userName = guest ? 'Guest' : email;
+
+  // Fake login: any email/pass accepted
+  userName = email.split('@')[0]; // simple display name
   document.getElementById('loginPage').style.display='none';
   document.getElementById('appPage').style.display='flex';
   document.getElementById('welcomeUser').innerText = userName;
-  loadSubjects();
+
+  loadSubjects(); // load initial subjects
 }
 
 /* ========== Quick subjects & subjects page ========== */
