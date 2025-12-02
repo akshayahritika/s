@@ -171,15 +171,213 @@ function onLogin(guest=false){
 
   loadSubjects();
 }
+<script>
+/* ================== LOGIN ================== */
+let userName = null;
+let userRole = null;
+let selectedSubject = '';
+let chosenTopic = '';
 
-/* ========== Navigation & UI helpers ========== */ function navigate(e){ const btn = e.currentTarget; document.querySelectorAll('#sidebar .nav-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const page = btn.getAttribute('data-page'); document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); const el = document.getElementById(page); if(el) el.classList.add('active'); // When showing certain pages populate data if(page === 'subjectsPage') loadSubjects(); if(page === 'topicPage') renderTopics(); if(page === 'mindmapPage') populateMindmapTopics(); if(page === 'quizPage') loadQuiz(); if(page === 'wsPage') loadWorksheet(); } /* ========== Login ========== */ function onLogin(guest=false){ const email = document.getElementById('email').value.trim(); const pass = document.getElementById('passcode').value.trim(); const msg = document.getElementById('loginMessage'); msg.textContent = ''; if(!guest && (!email || !pass)){ msg.textContent = 'Enter email and passcode or click "Continue as Guest".'; return; } userName = guest ? 'Guest' : email; document.getElementById('loginPage').style.display='none'; document.getElementById('appPage').style.display='flex'; document.getElementById('welcomeUser').innerText = userName; loadSubjects(); } /* ========== Quick subjects & subjects page ========== */ function loadSubjects(){ const quick = document.getElementById('subjectsQuick'); const container = document.getElementById('subjectsContainer'); quick.innerHTML = ''; container.innerHTML = ''; Object.keys(subjectTopics).forEach(sub=>{ const btn = document.createElement('button'); btn.className = 'subject-card'; btn.innerText = sub; btn.onclick = ()=>selectSubject(sub); quick.appendChild(btn); const card = btn.cloneNode(true); card.onclick = ()=>selectSubject(sub); container.appendChild(card); }); } /* ========== Topic rendering ========== */ function selectSubject(sub){ selectedSubject = sub; chosenTopic = ''; document.getElementById('topicTitle').innerText = ${sub} Topics; // navigate to topic page document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('topicPage').classList.add('active'); renderTopics(); } function renderTopics(){ const container = document.getElementById('topicButtons'); container.innerHTML = ''; if(!selectedSubject) return; subjectTopics[selectedSubject].forEach(tp=>{ const b = document.createElement('button'); b.className = 'topic-btn'; b.innerText = tp; b.onclick = ()=> { selectTopic(tp) }; container.appendChild(b); }); } function selectTopic(tp){ chosenTopic = tp; // populate mmTopic select as well populateMindmapTopics(); // go directly to mindmap page document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('mindmapPage').classList.add('active'); showToast(Topic selected: ${tp}, 'success'); } /* ========== Flowchart generator ========== */ function populateMindmapTopics(){ const sel = document.getElementById('mmTopic'); sel.innerHTML = '<option value="">Choose topic</option>'; if(selectedSubject){ subjectTopics[selectedSubject].forEach(t=>{ const o = document.createElement('option'); o.value = t; o.textContent = t; if(t === chosenTopic) o.selected = true; sel.appendChild(o); }); } } function resetFlow(){ document.getElementById('flowSVG').innerHTML = ''; } function loadFlowchart(){ const topic = document.getElementById('mmTopic').value || chosenTopic; if(!topic){ alert('Select a topic'); return; } const data = (detailedFlowData[selectedSubject] && detailedFlowData[selectedSubject][topic])|| []; if(!data.length){ alert('No flow data'); return; } const svg = document.getElementById('flowSVG'); svg.innerHTML = ''; const boxW=300, boxH=70, gap=40, startX=80; data.forEach((txt,i)=>{ const y = i*(boxH+gap)+40; const rect = document.createElementNS("http://www.w3.org/2000/svg","rect"); rect.setAttribute("x",startX); rect.setAttribute("y",y); rect.setAttribute("width",boxW); rect.setAttribute("height",boxH); rect.setAttribute("rx",12); rect.setAttribute("fill","#071a2a"); rect.setAttribute("stroke", "url(#g1)"); rect.setAttribute("stroke-width",2); svg.appendChild(rect); const txtEl = document.createElementNS("http://www.w3.org/2000/svg","text"); txtEl.textContent = txt; txtEl.setAttribute("x",startX+boxW/2); txtEl.setAttribute("y",y+boxH/2+6); txtEl.setAttribute("text-anchor","middle"); txtEl.setAttribute("fill","white"); txtEl.setAttribute("font-size","16"); svg.appendChild(txtEl); if(i < data.length-1){ const line = document.createElementNS("http://www.w3.org/2000/svg","line"); line.setAttribute("x1",startX+boxW/2); line.setAttribute("y1",y+boxH); line.setAttribute("x2",startX+boxW/2); line.setAttribute("y2",y+boxH+gap-10); line.setAttribute("stroke", "rgba(132,210,255,0.25)"); line.setAttribute("stroke-width",3); svg.appendChild(line); } }); } /* ========== Quiz & Worksheet ========== */ function loadQuiz(){ const out = document.getElementById('quizOutput'); out.innerHTML=''; if(!selectedSubject || !chosenTopic){ out.innerHTML = '<p>Please select subject & topic first.</p>'; return; } const qlist = quizBank[selectedSubject] && quizBank[selectedSubject][chosenTopic]; if(!qlist){ out.innerHTML = '<p>Quiz not available.</p>'; return; } qlist.forEach((q,i)=>{ const div = document.createElement('div'); div.style.marginBottom='12px'; div.innerHTML = <p><strong>${i+1}.</strong> ${q.q}</p>; q.options.forEach(opt=>{ const b = document.createElement('button'); b.className='topic-btn'; b.style.marginRight='8px'; b.innerText = opt; b.onclick = ()=> showToast(opt===q.answer ? 'Correct' : 'Wrong. Ans: '+q.answer, opt===q.answer ? 'success' : 'error'); div.appendChild(b); }); out.appendChild(div); }); } function loadWorksheet(){ const out = document.getElementById('wsOutput'); out.innerHTML=''; if(!selectedSubject || !chosenTopic){ out.innerText='Select subject & topic'; return; } const w = wsBank[selectedSubject] && wsBank[selectedSubject][chosenTopic]; if(!w){ out.innerText='Worksheet not available'; return; } out.innerHTML = '<ol>'+ w.map(x=><li>${x}</li>).join('') +'</ol>'; } /* ========== Toast ========== */ function showToast(msg, type='success'){ const t = document.createElement('div'); t.className = 'toast ' + (type==='success' ? 'success' : 'error'); t.innerText = msg; document.body.appendChild(t); setTimeout(()=>t.remove(),1600); } /* ========== Mindmap interactive engine ========== */ const nodesLayer = document.getElementById('nodesLayer'); const connectionsSvg = document.getElementById('connectionsSvg'); let mmNodes = []; // {id, el, x, y, text} let mmEdges = []; // {fromId,toId} let nodeCounter = 0; function createNode(text, x=160, y=120){ const id = 'n'+(++nodeCounter); const el = document.createElement('div'); el.className = 'mm-node'; el.id = id; el.innerText = text; el.style.left = x+'px'; el.style.top = y+'px'; nodesLayer.appendChild(el); mmNodes.push({id, el, x, y, text}); makeDraggable(el); drawConnections(); return id; } function createRootNode(){ // place center-ish const rect = nodesLayer.getBoundingClientRect(); createNode(chosenTopic || 'Main Topic', Math.max(40, rect.width/2 - 80), 80); } function promptNewNode(){ const text = prompt('Node text:'); if(text) createNode(text, 60 + Math.random()*360, 160 + Math.random()*120); } function clearMindmap(){ mmNodes.forEach(n=>n.el.remove()); mmNodes=[]; mmEdges=[]; nodeCounter=0; drawConnections(); } function makeDraggable(el){ let offsetX=0, offsetY=0, dragging=false; el.onpointerdown = (ev)=>{ dragging=true; el.setPointerCapture(ev.pointerId); offsetX = ev.clientX - el.getBoundingClientRect().left; offsetY = ev.clientY - el.getBoundingClientRect().top; }; el.onpointermove = (ev)=>{ if(!dragging) return; const parentRect = nodesLayer.getBoundingClientRect(); const nx = ev.clientX - parentRect.left - offsetX; const ny = ev.clientY - parentRect.top - offsetY; el.style.left = nx + 'px'; el.style.top = ny + 'px'; // update node in mmNodes const obj = mmNodes.find(n=>n.id === el.id); if(obj){ obj.x = nx; obj.y = ny; } drawConnections(); }; el.onpointerup = (ev)=>{ dragging=false; try{ el.releasePointerCapture(ev.pointerId);}catch(e){} }; // right-click to connect last selected node to this node el.oncontextmenu = (ev)=>{ ev.preventDefault(); handleNodeContext(el.id); }; } let connectFrom = null; function handleNodeContext(id){ // toggles source selection for connecting nodes if(!connectFrom){ connectFrom = id; showToast('Source selected: ' + id, 'success'); return; } if(connectFrom === id){ connectFrom = null; showToast('Cancelled', 'error'); return; } // create edge mmEdges.push({fromId: connectFrom, toId: id}); connectFrom = null; drawConnections(); showToast('Connected', 'success'); } function drawConnections(){ // size svg to nodesLayer const layerRect = nodesLayer.getBoundingClientRect(); connectionsSvg.setAttribute('width', layerRect.width); connectionsSvg.setAttribute('height', layerRect.height); connectionsSvg.innerHTML = ''; // for each edge, draw a curved path mmEdges.forEach(e=>{ const a = document.getElementById(e.fromId).getBoundingClientRect(); const b = document.getElementById(e.toId).getBoundingClientRect(); // calculate relative coordinates to nodesLayer const parent = nodesLayer.getBoundingClientRect(); const x1 = a.left + a.width/2 - parent.left; const y1 = a.top + a.height/2 - parent.top; const x2 = b.left + b.width/2 - parent.left; const y2 = b.top + b.height/2 - parent.top; const cx = (x1+x2)/2; const cy = Math.min(y1,y2) - 40; const path = document.createElementNS('http://www.w3.org/2000/svg','path'); path.setAttribute('d', M ${x1},${y1} Q ${cx},${cy} ${x2},${y2}); path.setAttribute('stroke','rgba(132,210,255,0.5)'); path.setAttribute('stroke-width','3'); path.setAttribute('fill','none'); connectionsSvg.appendChild(path); }); } /* ========== AI BRANCH GENERATION for Mindmap ========== */ /* Uses the server proxy at POST /api/openai (recommended). If not found, will attempt a direct browser fetch using an API key stored in sessionStorage (only for local testing). */ async function generateAIBranches(){ if(mmNodes.length===0){ alert('Create a root node first (Create Root Node)'); return; } const root = mmNodes[0]; // use first node as root const topic = root.text || chosenTopic || 'Main Topic'; const systemPrompt = Generate 5 short branch titles for the topic "${topic}". Return results as a JSON array of strings only.; try{ const resp = await callOpenAI({messages:[{role:'system',content:systemPrompt}], max_tokens:300}); // expect returned content is JSON array or lines — attempt robust parsing let content = resp?.choices?.[0]?.message?.content || resp?.choices?.[0]?.text || ''; let arr; try{ arr = JSON.parse(content); } catch(e){ // fallback: split lines and strip numbering arr = content.split(/\r?\n/).map(s=>s.replace(/^\s*[\d\-\.\)]*\s*/,'').trim()).filter(Boolean); } if(!arr || arr.length===0) throw new Error('No branches returned'); // create nodes in a row under root const parentRect = nodesLayer.getBoundingClientRect(); const baseX = root.x || 60; const baseY = (root.y || 60) + 140; arr.slice(0,10).forEach((txt,i)=>{ createNode(txt, baseX + i*160, baseY); // connect root to new node const newNode = mmNodes[mmNodes.length-1]; mmEdges.push({fromId: root.id, toId: newNode.id}); }); drawConnections(); showToast('Branches created', 'success'); } catch(err){ console.error(err); showToast('AI error: ' + (err.message || 'failed'), 'error'); } } /* ========== Chat (ChatGPT) integration ========== */ /* Client sends {message: "text"} to /api/openai (POST). Server proxies to OpenAI. If no server available, you can set key via promptSetKey() and code will call OpenAI directly (not secure). */ async function sendChat(){ const input = document.getElementById('chatInput'); const txt = input.value.trim(); if(!txt) return; appendChat('user', txt); input.value = ''; appendChat('ai', '...'); // temporary try{ const resp = await callOpenAI({messages:[{role:'user',content:txt}], max_tokens:500}); const aiTxt = resp?.choices?.[0]?.message?.content || resp?.choices?.[0]?.text || 'No response'; // remove temporary '...' last AI message const aiNodes = document.querySelectorAll('#chatBox .chat-line'); const last = aiNodes[aiNodes.length-1]; if(last && last.dataset.role==='ai'){ last.querySelector('.text').innerText = aiTxt; } else appendChat('ai', aiTxt); // scroll const chatBox = document.getElementById('chatBox'); chatBox.scrollTop = chatBox.scrollHeight; } catch(e){ console.error(e); showToast('Chat error: ' + (e.message||'failed'),'error'); } } function appendChat(role, text){ const box = document.getElementById('chatBox'); if(role==='user'){ const d = document.createElement('div'); d.className='chat-line'; d.dataset.role='user'; d.innerHTML = <div class="chat-user">You</div><div class="text" style="color:var(--white)">${escapeHtml(text)}</div>; box.appendChild(d); } else { const d = document.createElement('div'); d.className='chat-line'; d.dataset.role='ai'; d.innerHTML = <div class="chat-ai">AI</div><div class="text" style="color:var(--muted)">${escapeHtml(text)}</div>; box.appendChild(d); } } /* ========== OpenAI call helper ========== First attempts to POST to /api/openai on same origin. If that returns 404/failed and a client key exists via sessionStorage('OPENAI_KEY'), tries direct call (insecure). This function returns the parsed OpenAI response object. */ async function callOpenAI(payload){ // prefer server proxy try{ const prox = await fetch('/api/openai', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); if(prox.ok){ return await prox.json(); } else { // if server returned 404 or CORS error, try fallback console.warn('Proxy failed, status', prox.status); // try fallback below } } catch(e){ console.warn('Proxy call error', e); } // FALLBACK: direct call from browser using sessionStorage key (for local testing ONLY) const fallbackKey = sessionStorage.getItem('OPENAI_KEY'); if(!fallbackKey) throw new Error('No server proxy and no client OPENAI_KEY set. Run the provided Node proxy or set a key via "Set OpenAI Key" button.'); // build request for Chat Completions const directResp = await fetch('https://api.openai.com/v1/chat/completions', { method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization': 'Bearer ' + fallbackKey }, body: JSON.stringify({ model: 'gpt-4o-mini', // or change to your preferred model ...payload }) }); if(!directResp.ok){ const text = await directResp.text(); throw new Error('OpenAI direct error: ' + text); } return await directResp.json(); }
-/* ================== UTILITIES ================== */
-function promptSetKey(){
-  const k = prompt('Paste your OpenAI API key here for quick local testing (not secure). For production use the server proxy. Leave blank to cancel.');
-  if(k){ sessionStorage.setItem('OPENAI_KEY', k.trim()); showToast('Key saved to session (local test only)', 'success'); }
+function onLogin(guest=false){
+  const msg = document.getElementById('loginMessage');
+  msg.textContent = '';
+  if(!guest){
+    const role = document.getElementById('roleSelect').value;
+    if(!role){ msg.textContent='Select Student or Teacher'; return; }
+    userName = role + ' User';
+    userRole = role;
+  } else {
+    userName = 'Guest';
+    userRole = 'Guest';
+  }
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('appPage').style.display='flex';
+  document.getElementById('welcomeUser').innerText = userName;
+
+  // Show/hide teacher-only features
+  document.querySelectorAll('.teacher-only').forEach(el=>{
+    el.style.display = (userRole==='Teacher') ? 'block' : 'none';
+  });
+
+  loadSubjects();
 }
-/* ===== QUIZ BANK (Multiple Choice) ===== */
-const quizBank = {
+
+/* ================== NAVIGATION ================== */
+function navigate(e){
+  const btn = e.currentTarget;
+  document.querySelectorAll('#sidebar .nav-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const page = btn.getAttribute('data-page');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById(page);
+  if(el) el.classList.add('active');
+  if(page === 'subjectsPage') loadSubjects();
+  if(page === 'topicPage') renderTopics();
+  if(page === 'mindmapPage') populateMindmapTopics();
+  if(page === 'quizPage') loadQuiz();
+  if(page === 'wsPage') loadWorksheet();
+}
+
+/* ================== SUBJECTS ================== */
+const subjectTopics = Object.keys(mmBank).reduce((a,k)=>{ a[k]=mmBank[k]; return a; },{});
+
+function loadSubjects(){
+  const quick = document.getElementById('subjectsQuick');
+  quick.innerHTML = '';
+  Object.keys(subjectTopics).forEach(sub=>{
+    const btn = document.createElement('button');
+    btn.className = 'subject-card';
+    btn.innerText = sub;
+    btn.onclick = ()=>selectSubject(sub);
+    quick.appendChild(btn);
+  });
+}
+
+/* ================== TOPICS ================== */
+function selectSubject(sub){
+  selectedSubject = sub;
+  chosenTopic = '';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('topicPage').classList.add('active');
+  renderTopics();
+}
+
+function renderTopics(){
+  const container = document.getElementById('topicButtons');
+  container.innerHTML = '';
+  if(!selectedSubject) return;
+  subjectTopics[selectedSubject].forEach(tp=>{
+    const b = document.createElement('button');
+    b.className='topic-btn';
+    b.innerText = tp;
+    b.onclick = ()=>selectTopic(tp);
+    container.appendChild(b);
+  });
+}
+
+function selectTopic(tp){
+  chosenTopic = tp;
+  populateMindmapTopics();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('mindmapPage').classList.add('active');
+  showToast(`Topic selected: ${tp}`, 'success');
+}
+
+/* ================== MINDMAP ================== */
+const nodesLayer = document.getElementById('mindmapContainer');
+const connectionsSvg = document.getElementById('connectionsSvg');
+let mmNodes = [];
+let mmEdges = [];
+let nodeCounter = 0;
+
+function createNode(text, x=160, y=120){
+  const id = 'n'+(++nodeCounter);
+  const el = document.createElement('div');
+  el.className='mm-node';
+  el.id=id;
+  el.innerText=text;
+  el.style.left=x+'px';
+  el.style.top=y+'px';
+  nodesLayer.appendChild(el);
+  mmNodes.push({id, el, x, y, text});
+  makeDraggable(el);
+  drawConnections();
+  return id;
+}
+
+function createRootNode(){
+  const rect = nodesLayer.getBoundingClientRect();
+  createNode(chosenTopic || 'Main Topic', rect.width/2-80, 80);
+}
+
+function promptNewNode(){
+  const text = prompt('Node text:');
+  if(text) createNode(text, 60 + Math.random()*360, 160 + Math.random()*120);
+}
+
+function clearMindmap(){
+  mmNodes.forEach(n=>n.el.remove());
+  mmNodes=[]; mmEdges=[]; nodeCounter=0; drawConnections();
+}
+
+function makeDraggable(el){
+  let offsetX=0, offsetY=0, dragging=false;
+  el.onpointerdown = (ev)=>{ dragging=true; el.setPointerCapture(ev.pointerId); offsetX=ev.clientX - el.getBoundingClientRect().left; offsetY=ev.clientY - el.getBoundingClientRect().top; };
+  el.onpointermove = (ev)=>{ 
+    if(!dragging) return;
+    const parentRect = nodesLayer.getBoundingClientRect();
+    const nx = ev.clientX - parentRect.left - offsetX;
+    const ny = ev.clientY - parentRect.top - offsetY;
+    el.style.left=nx+'px'; el.style.top=ny+'px';
+    const obj = mmNodes.find(n=>n.id===el.id);
+    if(obj){ obj.x=nx; obj.y=ny; }
+    drawConnections();
+  };
+  el.onpointerup = ()=>{ dragging=false; };
+  el.oncontextmenu = (ev)=>{ ev.preventDefault(); handleNodeContext(el.id); };
+}
+
+let connectFrom = null;
+function handleNodeContext(id){
+  if(!connectFrom){ connectFrom=id; showToast('Source selected', 'success'); return; }
+  if(connectFrom===id){ connectFrom=null; showToast('Cancelled','error'); return; }
+  mmEdges.push({fromId:connectFrom,toId:id}); connectFrom=null; drawConnections(); showToast('Connected','success');
+}
+
+function drawConnections(){
+  const layerRect=nodesLayer.getBoundingClientRect();
+  if(!connectionsSvg) return;
+  connectionsSvg.setAttribute('width',layerRect.width);
+  connectionsSvg.setAttribute('height',layerRect.height);
+  connectionsSvg.innerHTML='';
+  mmEdges.forEach(e=>{
+    const a=document.getElementById(e.fromId).getBoundingClientRect();
+    const b=document.getElementById(e.toId).getBoundingClientRect();
+    const parent=nodesLayer.getBoundingClientRect();
+    const x1=a.left+a.width/2-parent.left;
+    const y1=a.top+a.height/2-parent.top;
+    const x2=b.left+b.width/2-parent.left;
+    const y2=b.top+b.height/2-parent.top;
+    const cx=(x1+x2)/2; const cy=Math.min(y1,y2)-40;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M ${x1},${y1} Q ${cx},${cy} ${x2},${y2}`);
+    path.setAttribute('stroke','rgba(132,210,255,0.5)'); path.setAttribute('stroke-width','3'); path.setAttribute('fill','none');
+    connectionsSvg.appendChild(path);
+  });
+}
+
+/* ================== TOAST ================== */
+function showToast(msg, type='success'){
+  const t=document.createElement('div');
+  t.className='toast '+(type==='success'?'success':'error');
+  t.innerText=msg; document.body.appendChild(t);
+  setTimeout(()=>t.remove(),1600);
+}
+
+/* ================== QUIZ ================== */
+function loadQuiz(){
+  const out=document.getElementById("quizOutput");
+  const qArr = quizBank[chosenTopic];
+  if(!qArr){ out.innerHTML="<p>Quiz not available.</p>"; return; }
+  out.innerHTML="";
+  qArr.forEach((qObj, idx)=>{
+    const div=document.createElement("div"); div.style.marginBottom="15px";
+    const qP=document.createElement("p"); qP.innerText=(idx+1)+". "+qObj.q; div.appendChild(qP);
+    qObj.options.forEach(opt=>{
+      const btn=document.createElement("button");
+      btn.className="topic-btn"; btn.style.marginRight="8px"; btn.style.marginTop="6px";
+      btn.innerText=opt; btn.onclick=()=>checkAnswer(idx,opt);
+      div.appendChild(btn);
+    });
+    out.appendChild(div);
+  });
+}
+
+function checkAnswer(idx, selected){
+  const correct=quizBank[chosenTopic][idx].answer;
+  showToast(selected===correct ? `✅ Correct! (${selected})` : `❌ Wrong! Correct: ${correct}`, selected===correct ? 'success':'error');
+}
+  const quizBank = {
 "Grammar":[
 { q:"Which of the following is a noun?", options:["run","dog","quickly","beautiful"], answer:"dog" },
 { q:"Identify the verb in the sentence.", options:["is","happy","table","red"], answer:"is" },
@@ -275,8 +473,15 @@ const quizBank = {
 ]
 };
 
-/* ====== WORKSHEET BANK ===== */
-const wsBank = {
+
+/* ================== WORKSHEET ================== */
+function loadWorksheet(){
+  const out=document.getElementById("wsOutput");
+  const w=wsBank[chosenTopic];
+  if(!w){ out.innerHTML="Worksheet not available."; return; }
+  out.innerHTML=`<ol>${w.map(i=>`<li style="margin-bottom:8px;">${i}</li>`).join("")}</ol>`;
+}
+  const wsBank = {
 "Grammar":["1. Write 5 nouns.","2. Write 5 verbs.","3. Identify parts of speech.","4. Form 5 adverbs.","5. Write 3 complex sentences."],
 "Formal Letter":["1. Write a formal letter to principal.","2. Draft letter to bank manager.","3. Compose letter to editor.","4. Draft complaint letter.","5. Write letter to teacher."],
 "Speech":["1. Write a 2-minute speech on pollution.","2. Speech on importance of education.","3. Speech on health and hygiene.","4. Speech on computer usage.","5. Speech on favorite hobby."],
@@ -329,149 +534,51 @@ const aiBank = {
 "Cybersecurity":[{q:"cyber",a:"Cybersecurity protects systems and data from digital threats."}]
 };
 
-/* ====== QUIZ WITH CLICKABLE OPTIONS ===== */
-function loadQuiz(){
-const out = document.getElementById("quizOutput");
-const qArr = quizBank[chosenTopic];
-if(!qArr){ out.innerHTML = "<p>Quiz not available. Select a topic first.</p>"; return; }
-
-out.innerHTML = ""; // clear previous quiz
-
-qArr.forEach((qObj, idx) => {
-const div = document.createElement("div");
-div.style.marginBottom = "15px";
-
-const qP = document.createElement("p");
-qP.innerText = (idx+1) + ". " + qObj.q;
-div.appendChild(qP);
-
-qObj.options.forEach(opt => {
-const btn = document.createElement("button");
-btn.className = "topic-btn";
-btn.style.marginRight = "8px";
-btn.style.marginTop = "6px";
-btn.innerText = opt;
-btn.onclick = () => checkAnswer(idx, opt);
-div.appendChild(btn);
-});
-
-out.appendChild(div);
-});
-}
-
-function checkAnswer(idx, selected){
-const correct = quizBank[chosenTopic][idx].answer;
-// small visual feedback using toast style instead of alert
-const toast = document.createElement("div");
-toast.style.position="fixed";
-toast.style.left="50%";
-toast.style.transform="translateX(-50%)";
-toast.style.bottom="30px";
-toast.style.padding="12px 18px";
-toast.style.borderRadius="8px";
-toast.style.color="white";
-toast.style.boxShadow="0 8px 24px rgba(0,0,0,0.2)";
-if(selected === correct){
-toast.style.background="#2ecc71";
-toast.innerText = `✅ Correct! (${selected})`;
-} else {
-toast.style.background="#e74c3c";
-toast.innerText = `❌ Wrong! Correct: ${correct}`;
-}
-document.body.appendChild(toast);
-setTimeout(()=>toast.remove(),1400);
-}
-
-/* ====== WORKSHEET ===== */
-function loadWorksheet(){
-const out=document.getElementById("wsOutput");
-const w=wsBank[chosenTopic];
-if(!w){ out.innerHTML="Worksheet not available. Select a topic first."; return; }
-out.innerHTML = `<ol>${w.map(item=>`<li style="margin-bottom:8px;">${item}</li>`).join("")}</ol>`;
-}
-
-/* ====== AI CHAT ===== */
+/* ================== AI CHAT ================== */
 function sendMessage(){
-const input = document.getElementById("chatInput");
-const msg = input.value.trim();
-if(!msg) return;
-const chatBox = document.getElementById("chatBox");
-chatBox.innerHTML += `<div><b>You:</b> ${escapeHtml(msg)}</div>`;
-input.value = "";
-
-let reply = "Sorry, I don't know the answer.";
-
-if(chosenTopic && aiBank[chosenTopic]){
-const topicQA = aiBank[chosenTopic];
-// match by keyword present in user's message
-const match = topicQA.find(obj => msg.toLowerCase().includes(obj.q.toLowerCase()));
-reply = match ? match.a : topicQA[Math.floor(Math.random() * topicQA.length)].a;
-} else if(!chosenTopic) {
-reply = "Select a topic first to get subject-specific answers.";
+  const input=document.getElementById("chatInput");
+  const msg=input.value.trim(); if(!msg) return;
+  const chatBox=document.getElementById("chatBox");
+  chatBox.innerHTML+=`<div><b>You:</b> ${escapeHtml(msg)}</div>`; input.value='';
+  let reply="Sorry, I don't know the answer.";
+  if(chosenTopic && aiBank[chosenTopic]){
+    const topicQA=aiBank[chosenTopic];
+    const match=topicQA.find(o=>msg.toLowerCase().includes(o.q.toLowerCase()));
+    reply=match ? match.a : topicQA[Math.floor(Math.random()*topicQA.length)].a;
+  } else if(!chosenTopic){ reply="Select a topic first."; }
+  chatBox.innerHTML+=`<div><b>AI:</b> ${escapeHtml(reply)}</div>`;
+  chatBox.scrollTop=chatBox.scrollHeight;
 }
-
-chatBox.innerHTML += `<div><b>AI:</b> ${escapeHtml(reply)}</div>`;
-chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-/* simple escape to avoid HTML injection in chat */
-function escapeHtml(text){
-return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
-/* ====== MINDBANK (for mindmap bubbles) ===== */
-const mmBank = {
-"Grammar":["Parts of Speech","Sentence Structure","Tenses","Punctuation","Usage Rules"],
-"Formal Letter":["Sender Address","Date","Receiver Address","Subject","Salutation","Body Paragraphs","Closing"],
-"Speech":["Introduction","Body Points","Conclusion","Eye Contact","Gestures","Voice Modulation"],
-"Prose":["Paragraphs","Characters","Storyline","Dialogue","Narrative Flow"],
-"Algebra":["Expressions","Equations","Formulas","Solve for Unknowns","Linear & Quadratic"],
-"Linear Equations":["Variables","Equation Form","Graph Representation","Substitution","Elimination"],
-"Mensuration":["Area","Perimeter","Volume","Surface Area","Formulas"],
-"Reproduction in Animals":["Sexual Reproduction","Asexual Reproduction","Human Systems","Fertilization","Development"],
-"Sound":["Vibration","Pitch","Amplitude","Frequency","Reflection"],
-"Electricity":["Electric Charge","Ohm's Law","Circuits","Series & Parallel","Safety Devices"],
-"1857 Revolt":["Causes","Key Leaders","Events","Outcome","Lessons Learned"],
-"Resources":["Renewable","Non-renewable","Conservation","Sustainability","Examples"],
-"Judiciary":["Supreme Court","High Court","Lower Courts","Judges","Rights Protection"],
-"Vyakaran":["Sandhi","Samas","Ling","Vachya","Tense & Vachan"],
-"Patra Lekhan":["Formal Letter","Informal Letter","Sender & Receiver","Salutation","Closing"],
-"HTML":["Tags","Attributes","Headings","Paragraphs","Links & Images"],
-"AI Basics":["Narrow AI","General AI","Applications","Data & Algorithms","Automation"],
-"Shabd Roop":["Singular/Plural","Gender Changes","Case Forms","Usage","Verb Forms"],
-"Dhatu Roop":["Root Verb Forms","Tenses","Sentence Construction","Examples","Practice"],
-"French Grammar":["Articles","Nouns","Adjectives","Verbs","Tenses"],
-"Culture":["Festivals","Food","Music","Lifestyle","Etiquette"],
-"Networks":["LAN","WAN","Topology","Devices","Protocols"],
-"Cybersecurity":["Threats","Firewall","Antivirus","Safe Practices","Case Studies"]
+  const aiBank = {
+"Grammar":[{q:"noun",a:"A noun is a person, place, thing, or idea."},{q:"verb",a:"A verb is an action or state of being."}],
+"Formal Letter":[{q:"formal",a:"A formal letter is written in a professional tone for official purposes."}],
+"Speech":[{q:"speech",a:"A speech is a talk delivered to an audience with a clear structure."}],
+"Prose":[{q:"prose",a:"Prose is ordinary written language without metrical structure."}],
+"Algebra":[{q:"solve",a:"To solve x+5=12 subtract 5 from both sides so x=7."}],
+"Linear Equations":[{q:"linear",a:"A linear equation has variables to the power 1 and graphs as a straight line."}],
+"Mensuration":[{q:"area",a:"Mensuration includes area, perimeter and volume formulas for shapes."}],
+"Reproduction in Animals":[{q:"reproduction",a:"Reproduction produces new organisms; types include sexual and asexual."}],
+"Sound":[{q:"sound",a:"Sound is a vibration that travels through a medium."}],
+"Electricity":[{q:"electricity",a:"Electricity is the flow of electric charge; V = IR (Ohm's law)."}],
+"1857 Revolt":[{q:"1857",a:"The 1857 Revolt was a large-scale uprising against British rule in India."}],
+"Resources":[{q:"resources",a:"Resources are materials (renewable or non-renewable) used by humans."}],
+"Judiciary":[{q:"judiciary",a:"The judiciary interprets and applies the law through courts."}],
+"Vyakaran":[{q:"vyakaran",a:"Vyakaran means grammar in Hindi; it covers rules of language."}],
+"Patra Lekhan":[{q:"patra",a:"Patra Lekhan is letter-writing in Hindi, formal or informal formats."}],
+"HTML":[{q:"html",a:"HTML structures web content using tags like <p>, <h1>, <a>."}],
+"AI Basics":[{q:"ai",a:"AI is the simulation of human intelligence in machines."}],
+"Shabd Roop":[{q:"shabd",a:"Shabd Roop studies different forms of words in Sanskrit."}],
+"Dhatu Roop":[{q:"dhatu",a:"Dhatu Roop deals with verb root forms and their conjugations."}],
+"French Grammar":[{q:"french",a:"French grammar covers articles, nouns, adjectives, and verb conjugations."}],
+"Culture":[{q:"culture",a:"French culture includes food, art, festivals, and social etiquette."}],
+"Networks":[{q:"networks",a:"Networks connect devices so they can share data and resources."}],
+"Cybersecurity":[{q:"cyber",a:"Cybersecurity protects systems and data from digital threats."}]
 };
 
-/* ====== initialize quick UI ===== */
-(function init(){
-// if user already stored, show app
-const storedName = localStorage.getItem("sterlaUser");
-const storedRole = localStorage.getItem("sterlaRole");
-if(storedName){
-welcomeUser.innerText = "Welcome, " + storedName + " 👋";
-loginPage.style.display = "none";
-appPage.style.display = "flex";
-if(storedRole==="teacher") document.querySelectorAll(".teacher-only").forEach(el=>el.style.display="block");
+function escapeHtml(text){
+  return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
-})();
-/* ================== STARTUP ================== */
-(function init(){
-  // prefill mmTopic select with available topics
-  const sel = document.getElementById('mmTopic');
-  if(sel){
-    sel.innerHTML = '<option value="">Choose topic</option>';
-    Object.keys(subjectTopics).forEach(sub=>{
-      subjectTopics[sub].forEach(t=>{
-        const o = document.createElement('option'); o.value = t; o.textContent = `${sub} - ${t}`;
-        sel.appendChild(o);
-      });
-    });
-  }
-})();
 </script>
+
 </body>
 </html>
