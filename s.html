@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>STERLA - Integrated Mindmap + ChatGPT</title>
 <style>
-/* ---------- THEME / AESTHETICS (pinterest-like, black / light-blue / light-purple) ---------- */
 :root{
   --black:#0b0b0d;
   --card:#111216;
@@ -18,8 +17,6 @@
 }
 *{box-sizing:border-box;font-family:Inter, Poppins, system-ui, sans-serif;}
 html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0b0d 0%, #0f1724 100%);color:var(--white);}
-
-/* Layout */
 #loginPage{height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
 .login-card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));padding:28px;border-radius:20px;width:360px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03);}
 .login-card h2{margin-bottom:8px;color:var(--light-purple)}
@@ -27,43 +24,25 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0b0d 0%, #0f
 .input{width:100%;padding:12px;border-radius:12px;border:none;margin:8px 0;background:rgba(255,255,255,0.03);color:var(--white);outline:none}
 .btn{width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(90deg,var(--light-blue),var(--light-purple));color:#001;cursor:pointer;font-weight:700}
 .small-btn{padding:8px 12px;border-radius:10px;border:none;background:transparent;color:var(--light-blue);cursor:pointer}
-
-/* APP */
 #appPage{display:none;height:100vh;display:flex;overflow:hidden}
 #sidebar{width:260px;background:linear-gradient(180deg,#071028,#0b1633);padding:28px;color:var(--white);border-right:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:14px}
 .brand{font-size:28px;font-weight:800;color:var(--light-purple);letter-spacing:1px}
 .nav-btn{background:transparent;border:none;color:var(--muted);padding:12px 14px;text-align:left;border-radius:10px;cursor:pointer;font-weight:700}
 .nav-btn.active, .nav-btn:hover{background:rgba(255,255,255,0.02);color:var(--white);box-shadow:0 6px 20px rgba(124, 107, 255, 0.08)}
 #main{flex:1;overflow:auto;padding:30px;background:linear-gradient(180deg,#0b0f1a 0%, #0b1220 30%);}
-
-/* welcome card */
 #welcomeBox{background:linear-gradient(180deg,#071028, #0b1430);border-radius:16px;padding:26px;color:var(--white);display:flex;justify-content:space-between;align-items:center;gap:20px}
 #welcomeBox h2{color:var(--light-blue);font-size:22px;margin:0}
 #welcomeBox p{margin:0;color:var(--muted)}
-
-/* Subject cards (pinterest tiles) */
 .subject-grid{margin-top:18px;display:flex;flex-wrap:wrap;gap:18px}
-.subject-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px;width:200px;cursor:pointer;box-shadow:0 10px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02);font-weight:800;color:var(--light-blue;text-align:center}
+.subject-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px;width:200px;cursor:pointer;box-shadow:0 10px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02);font-weight:800;color:var(--light-blue);text-align:center}
 .subject-card:hover{transform:translateY(-6px);box-shadow:0 18px 50px rgba(6,10,40,0.8)}
-
-/* Pages */
 .page{display:none}
 .page.active{display:block}
-
-/* Output boxes */
 .output-box{background:linear-gradient(180deg,#061022,#081428);padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.02);color:var(--white)}
-
-/* Flowchart area (SVG boxes) */
-#flowArea{background:linear-gradient(180deg,#081427,#061022);padding:16px;border-radius:14px;margin-top:18px;min-height:420px;max-height:740px;overflow:auto;border:1px solid rgba(255,255,255,0.03)}
-svg.flow-svg{width:1600px;height:1200px;display:block}
-
-/* Mindmap interactive area */
 #mindmapContainer{position:relative;background:linear-gradient(180deg,#071427,#02101a);border-radius:14px;padding:12px;min-height:420px;overflow:auto;border:1px solid rgba(255,255,255,0.03)}
 .mm-node{position:absolute;padding:10px 14px;border-radius:10px;background:#071f35;border:2px solid rgba(132,210,255,0.15);cursor:grab;color:var(--white);min-width:110px;text-align:center;box-shadow:0 10px 24px rgba(2,6,23,0.6)}
 .mm-node:active{cursor:grabbing}
 #connectionsSvg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
-
-/* Chat */
 #chatBox{background:#061025;padding:12px;border-radius:12px;min-height:360px;max-height:520px;overflow:auto;border:1px solid rgba(255,255,255,0.02)}
 .chat-line{margin-bottom:12px}
 .chat-user{color:var(--light-blue);font-weight:700}
@@ -71,17 +50,10 @@ svg.flow-svg{width:1600px;height:1200px;display:block}
 .chat-input{margin-top:12px;display:flex;gap:12px}
 .chat-input input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--white)}
 .chat-input button{padding:10px 16px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--light-blue),var(--light-purple));color:#001;font-weight:800}
-
-/* toast */
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;padding:10px 18px;border-radius:999px;font-weight:700}
 .toast.success{background:var(--success);color:#000}
 .toast.error{background:var(--danger);color:#fff}
-
-/* responsive */
-@media (max-width:900px){
-  #sidebar{display:none}
-  #main{padding:18px}
-}
+@media (max-width:900px){#sidebar{display:none}#main{padding:18px}}
 </style>
 </head>
 <body>
@@ -100,7 +72,6 @@ svg.flow-svg{width:1600px;height:1200px;display:block}
     <p id="loginMessage" style="color:var(--danger);min-height:18px"></p>
     <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
       <button class="small-btn" onclick="onLogin(true)">Continue as Guest</button>
-      <button class="small-btn" onclick="promptSetKey()">Set OpenAI Key</button>
     </div>
   </div>
 </div>
@@ -110,7 +81,6 @@ svg.flow-svg{width:1600px;height:1200px;display:block}
   <aside id="sidebar" role="navigation">
     <div class="brand">STERLA</div>
     <button class="nav-btn active" data-page="homePage" onclick="navigate(event)">Home</button>
-    <button class="nav-btn" data-page="dashboard" onclick="navigate(event)">Dashboard</button>
     <button class="nav-btn" data-page="subjectsPage" onclick="navigate(event)">Subjects</button>
     <button class="nav-btn" data-page="topicPage" onclick="navigate(event)">Topics</button>
     <button class="nav-btn" data-page="mindmapPage" onclick="navigate(event)">Mind Map</button>
@@ -118,11 +88,10 @@ svg.flow-svg{width:1600px;height:1200px;display:block}
     <button class="nav-btn" data-page="wsPage" onclick="navigate(event)">Worksheet</button>
     <button class="nav-btn" data-page="aiChatPage" onclick="navigate(event)">AI Chat</button>
     <div style="flex:1"></div>
-    <div style="font-size:12px;color:var(--muted)">Tip: Add OpenAI key via top login screen for AI features.</div>
+    <div style="font-size:12px;color:var(--muted)">Tip: Login to unlock AI features.</div>
   </aside>
 
   <main id="main">
-    <!-- HOME -->
     <section id="homePage" class="page active">
       <div id="welcomeBox">
         <div>
@@ -134,168 +103,270 @@ svg.flow-svg{width:1600px;height:1200px;display:block}
           <div style="font-size:12px;margin-top:6px">Smart School Companion</div>
         </div>
       </div>
-
       <h3 style="color:var(--light-blue);margin-top:8px">Quick Subjects</h3>
       <div class="subject-grid" id="subjectsQuick"></div>
     </section>
 
-    <!-- rest of app unchanged ... same as your original code ... -->
+    <section id="subjectsPage" class="page"><div id="subjectList" class="subject-grid"></div></section>
+    <section id="topicPage" class="page"><div id="topicList" class="subject-grid"></div></section>
+    <section id="mindmapPage" class="page"><div id="mindmapContainer"><svg id="connectionsSvg"></svg></div></section>
+    <section id="quizPage" class="page"><div id="quizOutput" class="output-box"></div></section>
+    <section id="wsPage" class="page"><div id="wsOutput" class="output-box"></div></section>
+    <section id="aiChatPage" class="page">
+      <div id="chatBox"></div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Ask AI about this topic..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </section>
   </main>
 </div>
 
+<div id="toast" class="toast" style="display:none"></div>
+
 <script>
-/* ================== DATA BANKS ================== */
+// ====== DATA ======
+let userName = null, userRole = null, selectedSubject = '', chosenTopic = '';
+const subjects = ["Grammar","Formal Letter","Speech","Prose","Algebra","Linear Equations","Mensuration","Reproduction in Animals","Sound","Electricity","1857 Revolt","Resources","Judiciary","Vyakaran","Patra Lekhan","HTML","AI Basics","Shabd Roop","Dhatu Roop","French Grammar","Culture","Networks","Cybersecurity"];
+const topics = {
+  "Grammar":["Grammar"],"Formal Letter":["Formal Letter","Patra Lekhan"],"Speech":["Speech"],"Prose":["Prose"],"Algebra":["Algebra"],"Linear Equations":["Linear Equations"],"Mensuration":["Mensuration"],
+  "Reproduction in Animals":["Reproduction in Animals"],"Sound":["Sound"],"Electricity":["Electricity"],"1857 Revolt":["1857 Revolt"],"Resources":["Resources"],"Judiciary":["Judiciary"],"Vyakaran":["Vyakaran"],"Patra Lekhan":["Patra Lekhan"],
+  "HTML":["HTML"],"AI Basics":["AI Basics"],"Shabd Roop":["Shabd Roop"],"Dhatu Roop":["Dhatu Roop"],"French Grammar":["French Grammar"],"Culture":["Culture"],"Networks":["Networks"],"Cybersecurity":["Cybersecurity"]
+};
+
+
 const quizBank = {
-"Grammar":[ { q:"Which of the following is a noun?", options:["run","dog","quickly","beautiful"], answer:"dog" }, { q:"Identify the verb in the sentence.", options:["is","happy","table","red"], answer:"is" }, { q:"What is an adjective?", options:["A describing word","A doing word","A place","A person"], answer:"A describing word" } ], "Formal Letter":[ {q:"Which salutation is correct?", options:["Dear Sir","Hi buddy","Hey","Yo"], answer:"Dear Sir"}, {q:"Where does the date appear?", options:["Top right","Bottom left","Middle","Nowhere"], answer:"Top right"} ], "Speech":[ {q:"Opening of speech should be?", options:["Attention grabber","Random word","Slang","Silent start"], answer:"Attention grabber"}, {q:"How to conclude speech?", options:["Summarize & end memorably","Stop abruptly","Say random joke","Ignore"], answer:"Summarize & end memorably"} ], "Prose":[ {q:"Prose is written in?", options:["Ordinary grammatical structure","Verse form","Poetry","Haiku"], answer:"Ordinary grammatical structure"}, {q:"Does prose contain verses?", options:["No","Yes","Sometimes","Only poems"], answer:"No"} ], "Algebra":[ {q:"Solve x + 5 = 12", options:["x=7","x=17","x=5","x=12"], answer:"x=7"}, {q:"Simplify 2x + 3x", options:["5x","6x","x","2x"], answer:"5x"} ], "Linear Equations":[ {q:"Solve 2x + 3 = 7", options:["x=2","x=5","x=3","x=1"], answer:"x=2"}, {q:"Equation y = 2x + 1 forms?", options:["Straight line","Curve","Circle","Random"], answer:"Straight line"} ], "Mensuration":[ {q:"Find area of rectangle 5x7 cm?", options:["35","12","57","None"], answer:"35"}, {q:"Volume of cube side 4cm?", options:["64","16","12","8"], answer:"64"} ], "Reproduction in Animals":[ {q:"Two types of reproduction?", options:["Sexual & Asexual","Only sexual","Only asexual","None"], answer:"Sexual & Asexual"}, {q:"Fertilization occurs in?", options:["Animals & plants","Only animals","Only plants","None"], answer:"Animals & plants"} ], "Sound":[ {q:"Sound is?", options:["Vibration","Color","Light","Force"], answer:"Vibration"}, {q:"Speed of sound depends on?", options:["Medium","Color","Shape","Time"], answer:"Medium"} ], "Electricity":[ {q:"Ohm's law formula?", options:["V=IR","V+IR","VI=R","None"], answer:"V=IR"}, {q:"Series circuit has?", options:["Same current","Same voltage","Both","None"], answer:"Same current"} ], "1857 Revolt":[ {q:"First War of Independence year?", options:["1857","1757","1947","1800"], answer:"1857"}, {q:"Leader of revolt?", options:["Mangal Pandey","Nehru","Gandhi","Tipu Sultan"], answer:"Mangal Pandey"} ], "Resources":[ {q:"Renewable resource example?", options:["Solar energy","Coal","Oil","Gas"], answer:"Solar energy"}, {q:"Non-renewable resource?", options:["Coal","Sunlight","Wind","Water"], answer:"Coal"} ], "Judiciary":[ {q:"Highest court in India?", options:["Supreme Court","High Court","District Court","None"], answer:"Supreme Court"}, {q:"Independent judiciary protects?", options:["Rights","Money","Food","Vehicles"], answer:"Rights"} ], "Vyakaran":[ {q:"Sandhi is?", options:["Joining of words","Verb","Noun","Adjective"], answer:"Joining of words"}, {q:"Correct gender usage?", options:["Masculine/Feminine","Singular only","Plural only","None"], answer:"Masculine/Feminine"} ], "Patra Lekhan":[ {q:"Formal letter closing?", options:["Yours sincerely","Bye","Cheers","Later"], answer:"Yours sincerely"}, {q:"Should slang be used?", options:["No","Yes","Sometimes","Optional"], answer:"No"} ], "HTML":[ {q:"HTML stands for?", options:["HyperText Markup Language","HighText Modern Language","Hyper Tool Markup Language","None"], answer:"HyperText Markup Language"}, {q:"Tag for paragraph?", options:["<p>","<h1>","<img>","<a>"], answer:"<p>"} ], "AI Basics":[ {q:"AI stands for?", options:["Artificial Intelligence","Automated Input","Artificial Interface","None"], answer:"Artificial Intelligence"}, {q:"Narrow AI example?", options:["Chatbot","Self-driving car","Human brain","All"], answer:"Chatbot"} ], "Shabd Roop":[ {q:"Shabd Roop studies?", options:["Word forms","Colors","Animals","Numbers"], answer:"Word forms"}, {q:"Helps in?", options:["Sentence formation","Cooking","Music","Painting"], answer:"Sentence formation"} ], "Dhatu Roop":[ {q:"Dhatu Roop is about?", options:["Verb roots","Nouns","Adjectives","Adverbs"], answer:"Verb roots"}, {q:"Used for?", options:["Sentence construction","Painting","Drawing","Music"], answer:"Sentence construction"} ], "French Grammar":[ {q:"French grammar includes?", options:["Articles, nouns, verbs","Colors","Music","Dance"], answer:"Articles, nouns, verbs"}, {q:"Tense example?", options:["Present","Past","Future","All"], answer:"All"} ], "Culture":[ {q:"French culture includes?", options:["Traditions, food, art","Cars","Technology","Animals"], answer:"Traditions, food, art"}, {q:"Helps in?", options:["Communication","Sports","Mathematics","Physics"], answer:"Communication"} ], "Networks":[ {q:"Network connects?", options:["Computers","People","Books","Animals"], answer:"Computers"}, {q:"Purpose?", options:["Share data","Cook","Sleep","Run"], answer:"Share data"} ], "Cybersecurity":[ {q:"Cybersecurity protects?", options:["Computers & networks","Plants","Animals","Buildings"], answer:"Computers & networks"}, {q:"Threat example?", options:["Hacking","Cooking","Running","Painting"], answer:"Hacking"} ] };
+"Grammar":[
+{ q:"Which of the following is a noun?", options:["run","dog","quickly","beautiful"], answer:"dog" },
+{ q:"Identify the verb in the sentence.", options:["is","happy","table","red"], answer:"is" },
+{ q:"What is an adjective?", options:["A describing word","A doing word","A place","A person"], answer:"A describing word" }
+],
+"Formal Letter":[
+{q:"Which salutation is correct?", options:["Dear Sir","Hi buddy","Hey","Yo"], answer:"Dear Sir"},
+{q:"Where does the date appear?", options:["Top right","Bottom left","Middle","Nowhere"], answer:"Top right"}
+],
+"Speech":[
+{q:"Opening of speech should be?", options:["Attention grabber","Random word","Slang","Silent start"], answer:"Attention grabber"},
+{q:"How to conclude speech?", options:["Summarize & end memorably","Stop abruptly","Say random joke","Ignore"], answer:"Summarize & end memorably"}
+],
+"Prose":[
+{q:"Prose is written in?", options:["Ordinary grammatical structure","Verse form","Poetry","Haiku"], answer:"Ordinary grammatical structure"},
+{q:"Does prose contain verses?", options:["No","Yes","Sometimes","Only poems"], answer:"No"}
+],
+"Algebra":[
+{q:"Solve x + 5 = 12", options:["x=7","x=17","x=5","x=12"], answer:"x=7"},
+{q:"Simplify 2x + 3x", options:["5x","6x","x","2x"], answer:"5x"}
+],
+"Linear Equations":[
+{q:"Solve 2x + 3 = 7", options:["x=2","x=5","x=3","x=1"], answer:"x=2"},
+{q:"Equation y = 2x + 1 forms?", options:["Straight line","Curve","Circle","Random"], answer:"Straight line"}
+],
+"Mensuration":[
+{q:"Find area of rectangle 5x7 cm?", options:["35","12","57","None"], answer:"35"},
+{q:"Volume of cube side 4cm?", options:["64","16","12","8"], answer:"64"}
+],
+"Reproduction in Animals":[
+{q:"Two types of reproduction?", options:["Sexual & Asexual","Only sexual","Only asexual","None"], answer:"Sexual & Asexual"},
+{q:"Fertilization occurs in?", options:["Animals & plants","Only animals","Only plants","None"], answer:"Animals & plants"}
+],
+"Sound":[
+{q:"Sound is?", options:["Vibration","Color","Light","Force"], answer:"Vibration"},
+{q:"Speed of sound depends on?", options:["Medium","Color","Shape","Time"], answer:"Medium"}
+],
+"Electricity":[
+{q:"Ohm's law formula?", options:["V=IR","V+IR","VI=R","None"], answer:"V=IR"},
+{q:"Series circuit has?", options:["Same current","Same voltage","Both","None"], answer:"Same current"}
+],
+"1857 Revolt":[
+{q:"First War of Independence year?", options:["1857","1757","1947","1800"], answer:"1857"},
+{q:"Leader of revolt?", options:["Mangal Pandey","Nehru","Gandhi","Tipu Sultan"], answer:"Mangal Pandey"}
+],
+"Resources":[
+{q:"Renewable resource example?", options:["Solar energy","Coal","Oil","Gas"], answer:"Solar energy"},
+{q:"Non-renewable resource?", options:["Coal","Sunlight","Wind","Water"], answer:"Coal"}
+],
+"Judiciary":[
+{q:"Highest court in India?", options:["Supreme Court","High Court","District Court","None"], answer:"Supreme Court"},
+{q:"Independent judiciary protects?", options:["Rights","Money","Food","Vehicles"], answer:"Rights"}
+],
+"Vyakaran":[
+{q:"Sandhi is?", options:["Joining of words","Verb","Noun","Adjective"], answer:"Joining of words"},
+{q:"Correct gender usage?", options:["Masculine/Feminine","Singular only","Plural only","None"], answer:"Masculine/Feminine"}
+],
+"Patra Lekhan":[
+{q:"Formal letter closing?", options:["Yours sincerely","Bye","Cheers","Later"], answer:"Yours sincerely"},
+{q:"Should slang be used?", options:["No","Yes","Sometimes","Optional"], answer:"No"}
+],
+"HTML":[
+{q:"HTML stands for?", options:["HyperText Markup Language","HighText Modern Language","Hyper Tool Markup Language","None"], answer:"HyperText Markup Language"},
+{q:"Tag for paragraph?", options:["<p>","<h1>","<img>","<a>"], answer:"<p>"}
+],
+"AI Basics":[
+{q:"AI stands for?", options:["Artificial Intelligence","Automated Input","Artificial Interface","None"], answer:"Artificial Intelligence"},
+{q:"Narrow AI example?", options:["Chatbot","Self-driving car","Human brain","All"], answer:"Chatbot"}
+],
+"Shabd Roop":[
+{q:"Shabd Roop studies?", options:["Word forms","Colors","Animals","Numbers"], answer:"Word forms"},
+{q:"Helps in?", options:["Sentence formation","Cooking","Music","Painting"], answer:"Sentence formation"}
+],
+"Dhatu Roop":[
+{q:"Dhatu Roop is about?", options:["Verb roots","Nouns","Adjectives","Adverbs"], answer:"Verb roots"},
+{q:"Used for?", options:["Sentence construction","Painting","Drawing","Music"], answer:"Sentence construction"}
+],
+"French Grammar":[
+{q:"French grammar includes?", options:["Articles, nouns, verbs","Colors","Music","Dance"], answer:"Articles, nouns, verbs"},
+{q:"Tense example?", options:["Present","Past","Future","All"], answer:"All"}
+],
+"Culture":[
+{q:"French culture includes?", options:["Traditions, food, art","Cars","Technology","Animals"], answer:"Traditions, food, art"},
+{q:"Helps in?", options:["Communication","Sports","Mathematics","Physics"], answer:"Communication"}
+],
+"Networks":[
+{q:"Network connects?", options:["Computers","People","Books","Animals"], answer:"Computers"},
+{q:"Purpose?", options:["Share data","Cook","Sleep","Run"], answer:"Share data"}
+],
+"Cybersecurity":[
+{q:"Cybersecurity protects?", options:["Computers & networks","Plants","Animals","Buildings"], answer:"Computers & networks"},
+{q:"Threat example?", options:["Hacking","Cooking","Running","Painting"], answer:"Hacking"}
+]
+};
 
 const wsBank = {
-"Grammar":["1. Write 5 nouns.","2. Write 5 verbs.","3. Identify parts of speech.","4. Form 5 adverbs.","5. Write 3 complex sentences."], "Formal Letter":["1. Write a formal letter to principal.","2. Draft letter to bank manager.","3. Compose letter to editor.","4. Draft complaint letter.","5. Write letter to teacher."], "Speech":["1. Write a 2-minute speech on pollution.","2. Speech on importance of education.","3. Speech on health and hygiene.","4. Speech on computer usage.","5. Speech on favorite hobby."], "Prose":["1. Read passage & answer questions.","2. Summarize paragraph.","3. Identify main idea.","4. Write continuation.","5. Identify characters."], "Algebra":["1. Solve 5x + 3 = 18","2. Factor x^2 + 7x + 12","3. Simplify 4x + 9x","4. Solve 3x - 8 = 10","5. Form expression for sum of 2 numbers."], "Linear Equations":["1. Solve 2x + 5 = 15","2. Solve 3x - y = 6","3. Draw line y = x + 2","4. Solve 4x + 3y = 12","5. Apply elimination method."], "Mensuration":["1. Area of rectangle 5x7 cm","2. Perimeter of square 6 cm","3. Volume of cube 4 cm","4. Surface area of cylinder r=3,h=7","5. Circumference of circle r=5cm"], "Reproduction in Animals":["1. Draw human reproductive system","2. Explain fertilization","3. Define binary fission","4. Define budding","5. List types of reproduction"], "Sound":["1. Draw wave diagram","2. Define frequency","3. Define amplitude","4. Explain echo","5. Speed of sound in water"], "Electricity":["1. Draw simple circuit","2. Ohm’s law calculation","3. Identify series circuit","4. Identify parallel circuit","5. Name safety devices"], "1857 Revolt":["1. List causes","2. Name key leaders","3. Write main events","4. Outcome of revolt","5. Lessons learned"], "Resources":["1. List renewable resources","2. List non-renewable resources","3. Explain conservation","4. Importance of water conservation","5. Forest conservation examples"], "Judiciary":["1. Write role of Supreme Court","2. High Court duties","3. Lower court examples","4. Judge responsibilities","5. Importance of independent judiciary"], "Vyakaran":["1. Examples of Sandhi","2. Examples of Samas","3. Correct gender usage","4. Singular/dual/plural examples","5. Correct tense sentences"], "Patra Lekhan":["1. Write formal letter to principal","2. Write informal letter to friend","3. Include sender & receiver","4. Use proper salutation","5. End with signature"], "HTML":["1. Create simple HTML page","2. Add headings & paragraphs","3. Insert image","4. Add hyperlink","5. Create list items"], "AI Basics":["1. List types of AI","2. Example of narrow AI","3. Example of general AI","4. AI application in healthcare","5. AI in education"], "Shabd Roop":["1. Write singular/plural forms","2. Change gender of words","3. Correct case","4. Form words for verbs","5. Use in sentences"], "Dhatu Roop":["1. Write root verb forms","2. Present tense","3. Past tense","4. Future tense","5. Make sentences using verb"], "French Grammar":["1. Write 5 nouns","2. Write 5 adjectives","3. Conjugate 3 verbs","4. Form simple sentences","5. Translate sentences"], "Culture":["1. List French festivals","2. Describe French food","3. Famous French musicians","4. Social etiquette","5. Daily life in France"], "Networks":["1. Draw simple network diagram","2. Explain types of networks","3. Define LAN & WAN","4. Identify network devices","5. Network examples"], "Cybersecurity":["1. List common cyber threats","2. Define firewall","3. Explain antivirus software","4. Safety tips online","5. Case study of hacking"] };
+"Grammar":["1. Write 5 nouns.","2. Write 5 verbs.","3. Identify parts of speech.","4. Form 5 adverbs.","5. Write 3 complex sentences."],
+"Formal Letter":["1. Write a formal letter to principal.","2. Draft letter to bank manager.","3. Compose letter to editor.","4. Draft complaint letter.","5. Write letter to teacher."],
+"Speech":["1. Write a 2-minute speech on pollution.","2. Speech on importance of education.","3. Speech on health and hygiene.","4. Speech on computer usage.","5. Speech on favorite hobby."],
+"Prose":["1. Read passage & answer questions.","2. Summarize paragraph.","3. Identify main idea.","4. Write continuation.","5. Identify characters."],
+"Algebra":["1. Solve 5x + 3 = 18","2. Factor x^2 + 7x + 12","3. Simplify 4x + 9x","4. Solve 3x - 8 = 10","5. Form expression for sum of 2 numbers."],
+"Linear Equations":["1. Solve 2x + 5 = 15","2. Solve 3x - y = 6","3. Draw line y = x + 2","4. Solve 4x + 3y = 12","5. Apply elimination method."],
+"Mensuration":["1. Area of rectangle 5x7 cm","2. Perimeter of square 6 cm","3. Volume of cube 4 cm","4. Surface area of cylinder r=3,h=7","5. Circumference of circle r=5cm"],
+"Reproduction in Animals":["1. Draw human reproductive system","2. Explain fertilization","3. Define binary fission","4. Define budding","5. List types of reproduction"],
+"Sound":["1. Draw wave diagram","2. Define frequency","3. Define amplitude","4. Explain echo","5. Speed of sound in water"],
+"Electricity":["1. Draw simple circuit","2. Ohm’s law calculation","3. Identify series circuit","4. Identify parallel circuit","5. Name safety devices"],
+"1857 Revolt":["1. List causes","2. Name key leaders","3. Write main events","4. Outcome of revolt","5. Lessons learned"],
+"Resources":["1. List renewable resources","2. List non-renewable resources","3. Explain conservation","4. Importance of water conservation","5. Forest conservation examples"],
+"Judiciary":["1. Write role of Supreme Court","2. High Court duties","3. Lower court examples","4. Judge responsibilities","5. Importance of independent judiciary"],
+"Vyakaran":["1. Examples of Sandhi","2. Examples of Samas","3. Correct gender usage","4. Singular/dual/plural examples","5. Correct tense sentences"],
+"Patra Lekhan":["1. Write formal letter to principal","2. Write informal letter to friend","3. Include sender & receiver","4. Use proper salutation","5. End with signature"],
+"HTML":["1. Create simple HTML page","2. Add headings & paragraphs","3. Insert image","4. Add hyperlink","5. Create list items"],
+"AI Basics":["1. List types of AI","2. Example of narrow AI","3. Example of general AI","4. AI application in healthcare","5. AI in education"],
+"Shabd Roop":["1. Write singular/plural forms","2. Change gender of words","3. Correct case","4. Form words for verbs","5. Use in sentences"],
+"Dhatu Roop":["1. Write root verb forms","2. Present tense","3. Past tense","4. Future tense","5. Make sentences using verb"],
+"French Grammar":["1. Write 5 nouns","2. Write 5 adjectives","3. Conjugate 3 verbs","4. Form simple sentences","5. Translate sentences"],
+"Culture":["1. List French festivals","2. Describe French food","3. Famous French musicians","4. Social etiquette","5. Daily life in France"],
+"Networks":["1. Draw simple network diagram","2. Explain types of networks","3. Define LAN & WAN","4. Identify network devices","5. Network examples"],
+"Cybersecurity":["1. List common cyber threats","2. Define firewall","3. Explain antivirus software","4. Safety tips online","5. Case study of hacking"]
+};
 
+/* ====== AI CHAT WITH DEFAULT Q&A ===== */
 const aiBank = {
-"Grammar":[{q:"noun",a:"A noun is a person, place, thing, or idea."},{q:"verb",a:"A verb is an action or state of being."}], "Formal Letter":[{q:"formal",a:"A formal letter is written in a professional tone for official purposes."}], "Speech":[{q:"speech",a:"A speech is a talk delivered to an audience with a clear structure."}], "Prose":[{q:"prose",a:"Prose is ordinary written language without metrical structure."}], "Algebra":[{q:"solve",a:"To solve x+5=12 subtract 5 from both sides so x=7."}], "Linear Equations":[{q:"linear",a:"A linear equation has variables to the power 1 and graphs as a straight line."}], "Mensuration":[{q:"area",a:"Mensuration includes area, perimeter and volume formulas for shapes."}], "Reproduction in Animals":[{q:"reproduction",a:"Reproduction produces new organisms; types include sexual and asexual."}], "Sound":[{q:"sound",a:"Sound is a vibration that travels through a medium."}], "Electricity":[{q:"electricity",a:"Electricity is the flow of electric charge; V = IR (Ohm's law)."}], "1857 Revolt":[{q:"1857",a:"The 1857 Revolt was a large-scale uprising against British rule in India."}], "Resources":[{q:"resources",a:"Resources are materials (renewable or non-renewable) used by humans."}], "Judiciary":[{q:"judiciary",a:"The judiciary interprets and applies the law through courts."}], "Vyakaran":[{q:"vyakaran",a:"Vyakaran means grammar in Hindi; it covers rules of language."}], "Patra Lekhan":[{q:"patra",a:"Patra Lekhan is letter-writing in Hindi, formal or informal formats."}], "HTML":[{q:"html",a:"HTML structures web content using tags like <p>, <h1>, <a>."}], "AI Basics":[{q:"ai",a:"AI is the simulation of human intelligence in machines."}], "Shabd Roop":[{q:"shabd",a:"Shabd Roop studies different forms of words in Sanskrit."}], "Dhatu Roop":[{q:"dhatu",a:"Dhatu Roop deals with verb root forms and their conjugations."}], "French Grammar":[{q:"french",a:"French grammar covers articles, nouns, adjectives, and verb conjugations."}], "Culture":[{q:"culture",a:"French culture includes food, art, festivals, and social etiquette."}], "Networks":[{q:"networks",a:"Networks connect devices so they can share data and resources."}], "Cybersecurity":[{q:"cyber",a:"Cybersecurity protects systems and data from digital threats."}] };
+"Grammar":[{q:"noun",a:"A noun is a person, place, thing, or idea."},{q:"verb",a:"A verb is an action or state of being."}],
+"Formal Letter":[{q:"formal",a:"A formal letter is written in a professional tone for official purposes."}],
+"Speech":[{q:"speech",a:"A speech is a talk delivered to an audience with a clear structure."}],
+"Prose":[{q:"prose",a:"Prose is ordinary written language without metrical structure."}],
+"Algebra":[{q:"solve",a:"To solve x+5=12 subtract 5 from both sides so x=7."}],
+"Linear Equations":[{q:"linear",a:"A linear equation has variables to the power 1 and graphs as a straight line."}],
+"Mensuration":[{q:"area",a:"Mensuration includes area, perimeter and volume formulas for shapes."}],
+"Reproduction in Animals":[{q:"reproduction",a:"Reproduction produces new organisms; types include sexual and asexual."}],
+"Sound":[{q:"sound",a:"Sound is a vibration that travels through a medium."}],
+"Electricity":[{q:"electricity",a:"Electricity is the flow of electric charge; V = IR (Ohm's law)."}],
+"1857 Revolt":[{q:"1857",a:"The 1857 Revolt was a large-scale uprising against British rule in India."}],
+"Resources":[{q:"resources",a:"Resources are materials (renewable or non-renewable) used by humans."}],
+"Judiciary":[{q:"judiciary",a:"The judiciary interprets and applies the law through courts."}],
+"Vyakaran":[{q:"vyakaran",a:"Vyakaran means grammar in Hindi; it covers rules of language."}],
+"Patra Lekhan":[{q:"patra",a:"Patra Lekhan is letter-writing in Hindi, formal or informal formats."}],
+"HTML":[{q:"html",a:"HTML structures web content using tags like <p>, <h1>, <a>."}],
+"AI Basics":[{q:"ai",a:"AI is the simulation of human intelligence in machines."}],
+"Shabd Roop":[{q:"shabd",a:"Shabd Roop studies different forms of words in Sanskrit."}],
+"Dhatu Roop":[{q:"dhatu",a:"Dhatu Roop deals with verb root forms and their conjugations."}],
+"French Grammar":[{q:"french",a:"French grammar covers articles, nouns, adjectives, and verb conjugations."}],
+"Culture":[{q:"culture",a:"French culture includes food, art, festivals, and social etiquette."}],
+"Networks":[{q:"networks",a:"Networks connect devices so they can share data and resources."}],
+"Cybersecurity":[{q:"cyber",a:"Cybersecurity protects systems and data from digital threats."}]
 
-/* ================== LOGIN ================== */
-/* ================== LOGIN ================== */
-let userName = null;
-let userRole = null;
-let selectedSubject = '';
-let chosenTopic = '';
-
+// ====== LOGIN ======
 function onLogin(guest=false){
-  const msg = document.getElementById('loginMessage');
-  msg.textContent = '';
+  const msg=document.getElementById('loginMessage'); msg.textContent='';
   if(!guest){
-    const role = document.getElementById('roleSelect').value;
+    const role=document.getElementById('roleSelect').value;
     if(!role){ msg.textContent='Select Student or Teacher'; return; }
-    userName = role + ' User';
-    userRole = role;
-  } else {
-    userName = 'Guest';
-    userRole = 'Guest';
-  }
+    userName = role+' User'; userRole=role;
+  } else { userName='Guest'; userRole='Guest'; }
   document.getElementById('loginPage').style.display='none';
   document.getElementById('appPage').style.display='flex';
-  document.getElementById('welcomeUser').innerText = userName;
-
-  // Show/hide teacher-only features
-  document.querySelectorAll('.teacher-only').forEach(el=>{
-    el.style.display = (userRole==='Teacher') ? 'block' : 'none';
-  });
-
+  document.getElementById('welcomeUser').innerText=userName;
   loadSubjects();
 }
 
-
-/* ================== NAVIGATION ================== */
+// ====== NAVIGATION ======
 function navigate(e){
-  const btn = e.currentTarget;
+  const btn=e.currentTarget;
   document.querySelectorAll('#sidebar .nav-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const page = btn.getAttribute('data-page');
+  const page=btn.getAttribute('data-page');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const el = document.getElementById(page);
-  if(el) el.classList.add('active');
-  if(page === 'subjectsPage') loadSubjects();
-  if(page === 'topicPage') renderTopics();
-  if(page === 'mindmapPage') populateMindmapTopics();
-  if(page === 'quizPage') loadQuiz();
-  if(page === 'wsPage') loadWorksheet();
+  document.getElementById(page).classList.add('active');
+  if(page==='subjectsPage') loadSubjects();
+  if(page==='topicPage') renderTopics();
 }
 
-/* ================== SUBJECTS ================== */
-const subjectTopics = Object.keys(mmBank).reduce((a,k)=>{ a[k]=mmBank[k]; return a; },{});
-
+// ====== SUBJECTS ======
 function loadSubjects(){
-  const quick = document.getElementById('subjectsQuick');
-  quick.innerHTML = '';
-  Object.keys(subjectTopics).forEach(sub=>{
-    const btn = document.createElement('button');
-    btn.className = 'subject-card';
-    btn.innerText = sub;
-    btn.onclick = ()=>selectSubject(sub);
+  const quick=document.getElementById('subjectsQuick'); quick.innerHTML='';
+  subjects.forEach(sub=>{
+    const btn=document.createElement('button'); btn.className='subject-card'; btn.innerText=sub;
+    btn.onclick=()=>{ selectedSubject=sub; renderTopics(); navigate({currentTarget:document.querySelector('[data-page="topicPage"]')}); };
     quick.appendChild(btn);
   });
 }
 
-/* ================== TOPICS ================== */
-const subjectTopics = {
-  "Grammar": ["Grammar"],
-  "Formal Letter": ["Formal Letter", "Patra Lekhan"],
-  "Speech": ["Speech"],
-  "Prose": ["Prose"],
-  "Algebra": ["Algebra"],
-  "Linear Equations": ["Linear Equations"],
-  "Mensuration": ["Mensuration"],
-  "Reproduction in Animals": ["Reproduction in Animals"],
-  "Sound": ["Sound"],
-  "Electricity": ["Electricity"],
-  "1857 Revolt": ["1857 Revolt"],
-  "Resources": ["Resources"],
-  "Judiciary": ["Judiciary"],
-  "Vyakaran": ["Vyakaran"],
-  "Patra Lekhan": ["Patra Lekhan"],
-  "HTML": ["HTML"],
-  "AI Basics": ["AI Basics"],
-  "Shabd Roop": ["Shabd Roop"],
-  "Dhatu Roop": ["Dhatu Roop"],
-  "French Grammar": ["French Grammar"],
-  "Culture": ["Culture"],
-  "Networks": ["Networks"],
-  "Cybersecurity": ["Cybersecurity"]
-};
-
-/* ================== QUIZ ================== */
-function loadQuiz(){
-  const out=document.getElementById("quizOutput");
-  const qArr = quizBank[chosenTopic];
-  if(!qArr){ out.innerHTML="<p>Quiz not available.</p>"; return; }
-  out.innerHTML="";
-  qArr.forEach((qObj, idx)=>{
-    const div=document.createElement("div"); div.style.marginBottom="15px";
-    const qP=document.createElement("p"); qP.innerText=(idx+1)+". "+qObj.q; div.appendChild(qP);
-    qObj.options.forEach(opt=>{
-      const btn=document.createElement("button");
-      btn.className="topic-btn"; btn.style.marginRight="8px"; btn.style.marginTop="6px";
-      btn.innerText=opt; btn.onclick=()=>checkAnswer(idx,opt);
-      div.appendChild(btn);
-    });
-    out.appendChild(div);
+// ====== TOPICS ======
+function renderTopics(){
+  const list=document.getElementById('topicList'); list.innerHTML='';
+  if(!selectedSubject) return;
+  topics[selectedSubject].forEach(t=>{
+    const btn=document.createElement('button'); btn.className='subject-card'; btn.innerText=t;
+    btn.onclick=()=>{ chosenTopic=t; loadMindmap(); loadQuiz(); loadWorksheet(); };
+    list.appendChild(btn);
   });
 }
 
-function checkAnswer(idx, selected){
-  const correct=quizBank[chosenTopic][idx].answer;
-  showToast(selected===correct ? `✅ Correct! (${selected})` : `❌ Wrong! Correct: ${correct}`, selected===correct ? 'success':'error');
+// ====== MINDMAP ======
+function loadMindmap(){
+  const container=document.getElementById('mindmapContainer'); container.innerHTML='<svg id="connectionsSvg"></svg>';
+  const svg=document.getElementById('connectionsSvg');
+  const node=document.createElement('div'); node.className='mm-node'; node.style.left='50px'; node.style.top='50px'; node.innerText=chosenTopic;
+  container.appendChild(node);
+  // Draggable
+  node.onmousedown=function(e){
+    let shiftX=e.clientX-node.getBoundingClientRect().left;
+    let shiftY=e.clientY-node.getBoundingClientRect().top;
+    function moveAt(pageX,pageY){ node.style.left=pageX-shiftX+'px'; node.style.top=pageY-shiftY+'px'; }
+    function onMouseMove(e){ moveAt(e.pageX,e.pageY); }
+    document.addEventListener('mousemove',onMouseMove);
+    node.onmouseup=function(){ document.removeEventListener('mousemove',onMouseMove); node.onmouseup=null; };
+  }
+  node.ondragstart=function(){ return false; }
 }
 
-/* ================== WORKSHEET ================== */
-function loadWorksheet(){
-  const out=document.getElementById("wsOutput");
-  const w=wsBank[chosenTopic];
-  if(!w){ out.innerHTML="Worksheet not available."; return; }
-  out.innerHTML=`<ol>${w.map(i=>`<li style="margin-bottom:8px;">${i}</li>`).join("")}</ol>`;
+// ====== QUIZ ======
+function loadQuiz(){ const out=document.getElementById('quizOutput'); out.innerHTML='Quiz not available.'; }
+function checkAnswer(idx,opt){ showToast('Checked '+opt,'success'); }
+
+// ====== WORKSHEET ======
+function loadWorksheet(){ const out=document.getElementById('wsOutput'); out.innerHTML='Worksheet not available.'; }
+
+// ====== AI CHAT ======
+function sendMessage(){ const input=document.getElementById('chatInput'); let msg=input.value.trim(); if(!msg) return; input.value='';
+  const chat=document.getElementById('chatBox'); chat.innerHTML+='<div><b>You:</b> '+msg+'</div>';
+  let reply='Sorry, I don\'t know the answer.';
+  if(chosenTopic && aiBank[chosenTopic]){ const match=aiBank[chosenTopic].find(o=>msg.toLowerCase().includes(o.q.toLowerCase())); reply=match?match.a:aiBank[chosenTopic][0].a; }
+  else if(!chosenTopic){ reply='Select a topic first.'; }
+  chat.innerHTML+='<div><b>AI:</b> '+reply+'</div>'; chat.scrollTop=chat.scrollHeight;
 }
 
-/* ================== AI CHAT ================== */
-function sendMessage(){
-  const input=document.getElementById("chatInput");
-  const msg=input.value.trim(); if(!msg) return;
-  const chatBox=document.getElementById("chatBox");
-  chatBox.innerHTML+=`<div><b>You:</b> ${escapeHtml(msg)}</div>`; input.value='';
-  let reply="Sorry, I don't know the answer.";
-  if(chosenTopic && aiBank[chosenTopic]){
-    const topicQA=aiBank[chosenTopic];
-    const match=topicQA.find(o=>msg.toLowerCase().includes(o.q.toLowerCase()));
-    reply=match ? match.a : topicQA[Math.floor(Math.random()*topicQA.length)].a;
-  } else if(!chosenTopic){ reply="Select a topic first."; }
-  chatBox.innerHTML+=`<div><b>AI:</b> ${escapeHtml(reply)}</div>`;
-  chatBox.scrollTop=chatBox.scrollHeight;
-}
-
-function escapeHtml(text){
-  return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
+// ====== TOAST ======
+function showToast(msg,type){ const t=document.getElementById('toast'); t.innerText=msg; t.className='toast '+type; t.style.display='block';
+  setTimeout(()=>{ t.style.display='none'; },2500); }
 </script>
-
 </body>
 </html>
