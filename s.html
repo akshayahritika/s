@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>STERLA</title>
 <style>
-  /* Base theme colors */
   :root {
     --black: #121212;
     --light-blue: #574b90;
@@ -29,6 +28,7 @@
     justify-content: center;
     align-items: center;
     background: var(--background-gradient);
+    flex-direction: column;
   }
   .login-container {
     background: rgba(255 255 255 / 0.1);
@@ -76,6 +76,30 @@
     margin-top: 10px;
     font-size: 14px;
     height: 18px;
+  }
+  .social-login {
+    margin-top: 25px;
+  }
+  .social-btn {
+    background: transparent;
+    border: 2px solid var(--white);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 8px 10px 0 0;
+    font-weight: 600;
+    font-size: 16px;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  .social-btn:hover {
+    background: var(--white);
+    color: var(--black);
+  }
+  .or-text {
+    margin: 20px 0 10px;
+    font-weight: 600;
+    font-size: 18px;
   }
 
   /* APP PAGE */
@@ -249,12 +273,17 @@
     background: rgba(255 255 255 / 0.15);
     border-radius: 14px;
     border: 2px solid var(--light-purple);
+    margin-top: 20px;
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    height: 600px;
   }
   svg {
     user-select: none;
   }
 
-  /* Toast feedback */
+  /* Toast */
   .toast {
     position: fixed;
     left: 50%;
@@ -278,96 +307,106 @@
 <body>
 
 <div id="loginPage">
-  <div class="login-container">
-    <h2>Login</h2>
-    <input type="email" id="email" placeholder="Enter Email" />
-    <input type="password" id="passcode" placeholder="Enter Passcode" />
-    <button onclick="login()">Login</button>
-    <p id="loginMessage"></p>
+  <div class="login-container" role="main" aria-label="Login form">
+    <h2>Enter your email to sign in</h2>
+    <input type="email" id="email" placeholder="Enter Email" aria-label="Email" />
+    <input type="password" id="passcode" placeholder="Enter Passcode" aria-label="Passcode" />
+    <button aria-label="Login with Email and Passcode" onclick="login()">Login</button>
+    <p id="loginMessage" role="alert"></p>
+    <div class="or-text" aria-hidden="true">OR</div>
+    <div class="social-login" role="region" aria-label="Social Sign up options">
+      <button class="social-btn" onclick="alert('Google sign-up integration not implemented')"
+        aria-label="Sign up with Google">Sign up with Google</button>
+      <button class="social-btn" onclick="alert('Facebook sign-up integration not implemented')"
+        aria-label="Sign up with Facebook">Sign up with Facebook</button>
+      <button class="social-btn" onclick="alert('Phone number sign-up integration not implemented')"
+        aria-label="Sign up with Phone Number">Sign up with Phone Number</button>
+    </div>
   </div>
 </div>
 
-<div id="appPage">
-  <div id="sidebar">
+<div id="appPage" role="main">
+  <nav id="sidebar" aria-label="Main navigation">
     <h2>STERLA</h2>
-    <button class="nav-btn" onclick="showPage('homePage')">Home</button>
-    <button class="nav-btn" onclick="showPage('dashboard')">Dashboard</button>
-    <button class="nav-btn" onclick="showPage('subjectsPage')">Subjects</button>
-    <button class="nav-btn" onclick="showPage('mindmap')">Mind Map</button>
-    <button class="nav-btn" onclick="showPage('quizPage')">Quiz</button>
-    <button class="nav-btn" onclick="showPage('wsPage')">Worksheet</button>
-    <button class="nav-btn teacher-only" onclick="showPage('managePage')">Teacher Panel</button>
-    <button class="nav-btn" onclick="showPage('aiChatPage')">AI Chat</button>
-  </div>
+    <button class="nav-btn" onclick="showPage('homePage')" aria-label="Go to Home">Home</button>
+    <button class="nav-btn" onclick="showPage('dashboard')" aria-label="Go to Dashboard">Dashboard</button>
+    <button class="nav-btn" onclick="showPage('subjectsPage')" aria-label="Go to Subjects">Subjects</button>
+    <button class="nav-btn" onclick="showPage('mindmap')" aria-label="Go to Mind Map">Mind Map</button>
+    <button class="nav-btn" onclick="showPage('quizPage')" aria-label="Go to Quiz">Quiz</button>
+    <button class="nav-btn" onclick="showPage('wsPage')" aria-label="Go to Worksheet">Worksheet</button>
+    <button class="nav-btn teacher-only" onclick="showPage('managePage')" aria-label="Go to Teacher Panel">Teacher Panel</button>
+    <button class="nav-btn" onclick="showPage('aiChatPage')" aria-label="Go to AI Chat Assistant">AI Chat</button>
+  </nav>
 
   <div id="main">
-    <div id="homePage" class="page active">
+    <section id="homePage" class="page active" tabindex="-1">
       <h1 id="welcomeUser">Welcome to STERLA</h1>
-      <div id="welcomeBox" class="glass">
+      <div id="welcomeBox" class="glass" role="region" aria-label="Welcome message and quick instructions">
         <div>
           <h2>Your learning companion</h2>
           <p>Choose a subject → pick a topic → get mindmap / quiz / worksheet!</p>
         </div>
-        <img src="https://cdn-icons-png.flaticon.com/512/2942/2942943.png" alt="school icon" />
+        <img src="https://cdn-icons-png.flaticon.com/512/2942/2942943.png" alt="School Icon" />
       </div>
       <div style="margin-top: 18px;">
         <h3>Quick Subjects</h3>
         <div id="subjectsQuick"></div>
       </div>
-    </div>
+    </section>
 
-    <div id="dashboard" class="page"><h1>Dashboard</h1><h2>Announcements</h2>
+    <section id="dashboard" class="page" tabindex="-1">
+      <h1>Dashboard</h1>
+      <h2>Announcements</h2>
       <div class="announce">• Chemistry worksheet due Monday</div>
       <div class="announce">• Biology test next Friday</div>
       <div class="announce">• Math homework submission closes tonight</div>
-    </div>
+    </section>
 
-    <div id="subjectsPage" class="page">
+    <section id="subjectsPage" class="page" tabindex="-1">
       <h1>Select a Subject</h1>
       <div id="subjectsContainer"></div>
-    </div>
+    </section>
 
-    <div id="topicPage" class="page">
+    <section id="topicPage" class="page" tabindex="-1">
       <h1 id="topicTitle"></h1>
       <div id="topicButtons"></div>
-    </div>
+    </section>
 
-    <div id="mindmap" class="page">
+    <section id="mindmap" class="page" tabindex="-1">
       <h2>Flowchart Generator</h2>
       <label for="mmTopic">Select Topic:</label>
-      <select id="mmTopic"><option value="">Choose topic</option></select>
-      <button onclick="loadFlowchart()">Generate Flowchart</button>
-      <div id="flowArea" style="width:100%;height:600px;border-radius:14px;border:2px solid var(--light-purple);background: rgba(255 255 255 / 0.15);margin-top:20px;position:relative;overflow:auto;">
-        <svg id="flowSVG" width="2000" height="2000" style="position:absolute;top:0;left:0;"></svg>
+      <select id="mmTopic" aria-label="Select Topic for Mindmap"><option value="">Choose topic</option></select>
+      <button onclick="loadFlowchart()" aria-label="Generate Flowchart">Generate Flowchart</button>
+      <div id="flowArea">
+        <svg id="flowSVG" width="2000" height="2000"></svg>
       </div>
-    </div>
+    </section>
 
-    <div id="quizPage" class="page">
+    <section id="quizPage" class="page" tabindex="-1">
       <h1>Quiz</h1>
       <div class="output-box" id="quizOutput"></div>
-    </div>
+    </section>
 
-    <div id="wsPage" class="page">
+    <section id="wsPage" class="page" tabindex="-1">
       <h1>Worksheet</h1>
       <div class="output-box" id="wsOutput"></div>
-    </div>
-    
-    <div id="managePage" class="page teacher-only">
+    </section>
+
+    <section id="managePage" class="page teacher-only" tabindex="-1">
       <h1>Teacher Panel</h1>
       <p>Here you can upload worksheets, add quizzes, view submissions, manage announcements.</p>
-    </div>
+    </section>
 
-    <div id="aiChatPage" class="page">
+    <section id="aiChatPage" class="page" tabindex="-1">
       <h1>AI Chat Assistant</h1>
-      <div id="chatBox"></div>
-      <input type="text" id="chatInput" placeholder="Ask me anything..." />
-      <button id="chatBtn">Send</button>
-    </div>
+      <div id="chatBox" aria-live="polite" aria-atomic="true"></div>
+      <input type="text" id="chatInput" placeholder="Ask me anything..." aria-label="Chat input" />
+      <button id="chatBtn" aria-label="Send chat message">Send</button>
+    </section>
   </div>
 </div>
 
 <script>
-  // Show popup for paid promotion on page load
   window.onload = function() {
     if(confirm("Do you want to see our paid promotion?")){
       alert("Thank you for your interest! Visit our sponsor for awesome deals.");
@@ -389,6 +428,7 @@
   const mmTopicSelect = document.getElementById("mmTopic");
   const svgContainer = document.getElementById("flowSVG");
   const diagramTitle = document.querySelector("#mindmap h2");
+  const welcomeUser = document.getElementById("welcomeUser");
 
   let selectedSubject = "";
   let chosenTopic = "";
@@ -401,6 +441,7 @@
       loginMsg.style.color = "red";
       return;
     }
+    // Example simple auth
     if(email === "admin@example.com" && passcode === "1234"){
       loginMsg.textContent = "Login successful!";
       loginMsg.style.color = "lightgreen";
@@ -499,155 +540,4 @@
         line.setAttribute("y2", y + boxH + gapV - 24);
         line.setAttribute("stroke", "#8a7cc1");
         line.setAttribute("stroke-width", 4);
-        svgContainer.appendChild(line);
-      }
-    });
-  }
-
-  // Quiz
-  const quizBank = {
-    English: {
-      Grammar: [
-        { q: "Which of the following is a noun?", options: ["run", "dog", "quickly", "beautiful"], answer: "dog" },
-        { q: "Identify the verb in the sentence.", options: ["is", "happy", "table", "red"], answer: "is" },
-        { q: "What is an adjective?", options: ["A describing word", "A doing word", "A place", "A person"], answer: "A describing word" },
-      ],
-      Formal Letter: [
-        {q:"Which salutation is correct?", options:["Dear Sir","Hi buddy","Hey","Yo"], answer:"Dear Sir"},
-        {q:"Where does the date appear?", options:["Top right","Bottom left","Middle","Nowhere"], answer:"Top right"}
-      ]
-    }
-  };
-
-  function loadQuiz(){
-    const out = document.getElementById("quizOutput");
-    if(!selectedSubject || !chosenTopic){
-      out.innerHTML = "<p>Please select a subject and topic first.</p>";
-      return;
-    }
-    const qArr = quizBank[selectedSubject]?.[chosenTopic];
-    if(!qArr){
-      out.innerHTML = "<p>No quiz available for this topic.</p>";
-      return;
-    }
-    out.innerHTML = "";
-    qArr.forEach((qObj, idx)=>{
-      const div = document.createElement("div");
-      div.style.marginBottom = "20px";
-      let qP = document.createElement("p");
-      qP.textContent = (idx+1) + ". " + qObj.q;
-      div.appendChild(qP);
-      qObj.options.forEach(opt=>{
-        let btn = document.createElement("button");
-        btn.className = "topic-btn";
-        btn.innerText = opt;
-        btn.style.marginRight = "12px";
-        btn.onclick = () => checkAnswer(idx,opt);
-        div.appendChild(btn);
-      });
-      out.appendChild(div);
-    });
-  }
-
-  function checkAnswer(idx, selected){
-    const correct = quizBank[selectedSubject][chosenTopic][idx].answer;
-    const toast = document.createElement("div");
-    toast.className = "toast " + (selected === correct ? "toast-success":"toast-error");
-    toast.textContent = selected === correct ? `✅ Correct! (${selected})` : `❌ Wrong! Correct: ${correct}`;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 1600);
-  }
-
-  // Worksheet bank example
-  const wsBank = {
-    English: {
-      Grammar: [
-        "Write 5 nouns.",
-        "Write 5 verbs.",
-        "Identify parts of speech in a sentence.",
-        "Form 5 adverbs.",
-        "Write 3 complex sentences."
-      ],
-      Formal Letter: [
-        "Write a formal letter to the principal.",
-        "Draft a letter to bank manager.",
-        "Compose a letter to editor.",
-        "Draft a complaint letter.",
-        "Write a letter to teacher."
-      ]
-    }
-  };
-
-  function loadWorksheet(){
-    const out = document.getElementById("wsOutput");
-    if(!selectedSubject || !chosenTopic){
-      out.innerHTML = "Please select a subject and topic first.";
-      return;
-    }
-    const w = wsBank[selectedSubject]?.[chosenTopic];
-    if(!w){
-      out.innerHTML = "Worksheet not available for this topic.";
-      return;
-    }
-    out.innerHTML = "<ol>" + w.map(i=>`<li>${i}</li>`).join("") + "</ol>";
-  }
-
-  // AI Chat with default answers
-  const aiBank = {
-    Grammar: [
-      {q:"noun",a:"A noun is a person, place, thing, or idea."},
-      {q:"verb",a:"A verb is an action or state of being."}
-    ],
-    Formal Letter:[
-      {q:"formal",a:"A formal letter is written in a professional and polite tone."}
-    ],
-    Speech:[
-      {q:"speech",a:"A speech is a structured talk delivered to an audience."}
-    ],
-  };
-
-  chatBtn.onclick = sendMessage;
-  
-  function sendMessage(){
-    const msg = chatInput.value.trim().toLowerCase();
-    if(!msg) return;
-    chatBox.innerHTML += `<div><b>You:</b> ${escapeHtml(msg)}</div>`;
-    chatInput.value = "";
-    let reply = "Sorry, I don't have an answer for that. Please select a topic and ask related questions.";
-    if(chosenTopic && aiBank[chosenTopic]){
-      const matched = aiBank[chosenTopic].find(obj=>msg.includes(obj.q));
-      reply = matched ? matched.a : "Please ask a specific question related to " + chosenTopic + ".";
-    } else if(!chosenTopic){
-      reply = "Please select a topic to chat about.";
-    }
-    chatBox.innerHTML += `<div><b>AI:</b> ${escapeHtml(reply)}</div>`;
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-
-  function escapeHtml(text){
-    return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  }
-
-  function showPage(p){
-    document.querySelectorAll(".page").forEach(el=>el.classList.remove("active"));
-    const el = document.getElementById(p);
-    if(el) el.classList.add("active");
-    if(p==="subjectsPage") loadSubjects();
-    if(p==="topicPage") renderTopicButtons();
-    if(p==="mindmap") {
-      populateMindmapTopics();
-      // Automatically select topic if already chosen
-      if(chosenTopic) mmTopicSelect.value = chosenTopic;
-    }
-    if(p==="quizPage") loadQuiz();
-    if(p==="wsPage") loadWorksheet();
-  }
-
-  // Initialize small UI
-  (function init(){
-    showPage("loginPage");
-  })();
-</script>
-
-</body>
-</html>
+        svgContainer
