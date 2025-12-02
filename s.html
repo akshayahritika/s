@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>STERLA</title>
+<title>STERLA - Smart School Companion</title>
 <style>
   :root {
-    --black: #121212;
-    --light-blue: #574b90;
-    --light-purple: #8a7cc1;
-    --white: #f0f0f0;
-    --accent: #0099ff;
-    --background-gradient: linear-gradient(135deg, var(--light-blue), var(--light-purple));
+    --bg-dark: #0e0e2f;
+    --bg-gradient: linear-gradient(135deg, #4b6cb7, #182848);
+    --primary-light: #7289da;
+    --primary-dark: #283593;
+    --accent: #6c63ff;
+    --white: #f4f4f9;
+    --error-red: #e55a5a;
+    --success-green: #3cd48b;
   }
   * {
     margin: 0; padding: 0; box-sizing: border-box;
@@ -19,127 +21,149 @@
   }
   html, body {
     height: 100%;
-    background: var(--black);
+    background: var(--bg-dark);
     color: var(--white);
   }
   #loginPage {
     height: 100vh;
+    background: var(--bg-gradient);
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--background-gradient);
     flex-direction: column;
   }
   .login-container {
-    background: rgba(255 255 255 / 0.1);
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 0 30px rgba(138,124,193,0.5);
-    width: 320px;
+    background: rgba(255 255 255 / 0.12);
+    padding: 30px 36px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px var(--accent);
+    max-width: 360px;
+    width: 100%;
     text-align: center;
-    color: var(--white);
   }
   .login-container h2 {
-    margin-bottom: 20px;
     font-weight: 700;
-    font-size: 28px;
+    font-size: 2rem;
+    margin-bottom: 18px;
+  }
+  .login-container p {
+    margin-bottom: 22px;
+    color: #ddd;
   }
   .login-container input {
     width: 100%;
-    padding: 12px 14px;
-    margin-bottom: 15px;
-    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-radius: 10px;
     border: none;
-    background: rgba(255 255 255 / 0.15);
+    font-size: 1rem;
+    background: rgba(255 255 255 / 0.2);
     color: var(--white);
-    font-size: 16px;
   }
   .login-container input::placeholder {
-    color: rgba(255 255 255 / 0.7);
+    color: rgba(255 255 255, 0.7);
   }
   .login-container button {
-    padding: 12px 0;
     width: 100%;
-    background: var(--accent);
+    padding: 14px 0;
+    border-radius: 12px;
     border: none;
-    border-radius: 8px;
-    font-size: 18px;
+    background: var(--accent);
     color: var(--white);
+    font-weight: 700;
+    font-size: 1.1rem;
     cursor: pointer;
-    font-weight: 600;
+    margin-top: 10px;
     transition: background 0.3s ease;
   }
   .login-container button:hover {
-    background: #0077cc;
+    background: #5140d5;
   }
   #loginMessage {
     margin-top: 10px;
-    font-size: 14px;
-    height: 18px;
-  }
-  .social-login {
-    margin-top: 25px;
-  }
-  .social-btn {
-    background: transparent;
-    border: 2px solid var(--white);
-    color: var(--white);
-    border-radius: 8px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin: 8px 10px 0 0;
-    font-weight: 600;
-    font-size: 16px;
-    transition: background 0.3s ease, color 0.3s ease;
-  }
-  .social-btn:hover {
-    background: var(--white);
-    color: var(--black);
+    font-size: 0.9rem;
+    min-height: 18px;
   }
   .or-text {
-    margin: 20px 0 10px;
+    margin: 22px 0 14px;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 1.2px;
+    color: rgba(255 255 255 / 0.75);
+  }
+  .social-login {
+    display: flex;
+    justify-content: space-between;
+  }
+  .social-btn {
+    flex: 1;
+    margin: 0 6px;
+    padding: 12px 8px;
+    border: 2px solid var(--white);
+    border-radius: 12px;
+    color: var(--white);
     font-weight: 600;
-    font-size: 18px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+  .social-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--white);
+  }
+  .skip-login {
+    margin-top:20px;
+    font-size:1rem;
+    color: #ccc;
+  }
+  .skip-login button {
+    background:none;
+    border:none;
+    color: var(--accent);
+    cursor:pointer;
+    font-weight: bold;
+    font-size: 1rem;
   }
 
-  /* APP PAGE */
   #appPage {
     display: none;
     height: 100vh;
     width: 100%;
     display: flex;
-    background: var(--background-gradient);
+    background: var(--bg-gradient);
   }
   #sidebar {
     width: 260px;
-    background: var(--light-blue);
-    padding: 30px 20px;
+    background: var(--primary-dark);
+    padding: 28px 20px;
     color: var(--white);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
   #sidebar h2 {
-    font-size: 28px;
-    margin-bottom: 25px;
+    font-size: 2.4rem;
+    margin-bottom: 30px;
   }
   .nav-btn {
     background: transparent;
     color: var(--white);
     border: none;
-    padding: 14px 18px;
-    border-radius: 12px;
-    font-size: 18px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    font-size: 1.2rem;
     text-align: left;
     cursor: pointer;
     transition: background 0.3s ease;
   }
   .nav-btn:hover {
-    background: var(--light-purple);
+    background: var(--primary-light);
   }
   #main {
     flex-grow: 1;
-    padding: 36px 40px;
+    padding: 36px 48px;
     overflow-y: auto;
     color: var(--white);
   }
@@ -150,59 +174,56 @@
     display: block;
   }
 
-  /* Welcome Box */
   #welcomeBox {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(138,124,193,0.3);
-    border-radius: 18px;
-    padding: 40px;
-    margin-bottom: 25px;
+    background: rgba(108, 99, 255, 0.15);
+    border-radius: 24px;
+    padding: 48px;
+    margin-bottom: 32px;
   }
   #welcomeBox h2 {
-    font-size: 36px;
-    max-width: 60%;
+    font-size: 3rem;
+    max-width: 64%;
   }
   #welcomeBox p {
-    font-size: 20px;
-    margin-top: 12px;
-    max-width: 60%;
+    font-size: 1.3rem;
+    margin-top: 14px;
+    max-width: 64%;
   }
   #welcomeBox img {
     width: 180px;
-    filter: drop-shadow(0 0 6px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 0 12px rgba(108, 99, 255, 0.7));
   }
 
-  /* Subject Cards */
   .subject-card {
-    padding: 20px;
-    margin: 15px 14px;
-    background: var(--black);
-    border-radius: 18px;
-    border: 2px solid var(--light-purple);
-    width: 170px;
+    padding: 22px;
+    margin: 18px 16px;
+    background: var(--bg-dark);
+    border-radius: 24px;
+    border: 2px solid var(--primary-light);
+    width: 178px;
     text-align: center;
     cursor: pointer;
     user-select: none;
-    font-weight: 600;
-    font-size: 20px;
+    font-weight: 700;
+    font-size: 1.25rem;
     color: var(--white);
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: background 0.4s ease, color 0.4s ease;
   }
   .subject-card:hover {
-    background: var(--light-purple);
-    color: var(--black);
+    background: var(--primary-light);
+    color: var(--bg-dark);
   }
 
-  /* Topic Buttons */
   .topic-btn {
-    padding: 14px 20px;
-    margin: 8px 6px;
-    border-radius: 18px;
-    background: var(--light-purple);
+    padding: 16px 26px;
+    margin: 10px 8px;
+    border-radius: 26px;
+    background: var(--primary-light);
     color: var(--white);
-    font-size: 18px;
+    font-size: 1.2rem;
     cursor: pointer;
     border: none;
     user-select: none;
@@ -212,43 +233,44 @@
     background: var(--accent);
   }
 
-  /* Output Boxes */
   .output-box {
-    background: rgba(255 255 255 / 0.15);
-    border-radius: 16px;
-    padding: 28px;
+    background: rgba(255 255 255 / 0.1);
+    border-radius: 24px;
+    padding: 36px;
     min-height: 260px;
-    font-size: 18px;
-    line-height: 1.5;
+    font-size: 1.2rem;
+    line-height: 1.6;
   }
   .announce {
-    background: rgba(138,124,193,0.2);
-    padding: 14px 18px;
-    border-radius: 14px;
-    margin-bottom: 14px;
+    background: rgba(108, 99, 255, 0.15);
+    padding: 14px 24px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+    font-size: 1.1rem;
   }
 
-  /* Chat */
   #chatBox {
-    background: rgba(255 255 255 / 0.15);
-    padding: 18px;
-    border-radius: 14px;
-    height: 430px;
+    background: rgba(255 255 255 / 0.1);
+    padding: 24px;
+    border-radius: 20px;
+    height: 460px;
     overflow-y: auto;
-    margin-bottom: 12px;
-    font-size: 16px;
+    margin-bottom: 18px;
+    font-size: 1rem;
+    line-height: 1.5;
   }
   #chatBox div {
-    margin-bottom: 10px;
+    margin-bottom: 14px;
   }
   #chatInput {
-    padding: 15px;
-    border-radius: 12px;
+    padding: 18px;
+    border-radius: 16px;
     border: none;
-    width: 80%;
-    font-size: 18px;
-    background: rgba(255 255 255 / 0.15);
+    width: 77%;
+    font-size: 1.1rem;
+    background: rgba(255 255 255 / 0.1);
     color: var(--white);
+    margin-right: 12px;
   }
   #chatInput::placeholder {
     color: rgba(255 255 255 / 0.6);
@@ -257,75 +279,74 @@
     background: var(--accent);
     border: none;
     color: white;
-    font-size: 18px;
-    padding: 15px 28px;
-    border-radius: 12px;
+    font-size: 1.1rem;
+    padding: 18px 36px;
+    border-radius: 16px;
     cursor: pointer;
-    margin-left: 10px;
-    font-weight: 600;
+    font-weight: 700;
+    transition: background 0.3s ease;
   }
   #chatBtn:hover {
-    background: #0077cc;
+    background: #6258d4;
   }
 
-  /* Mindmap */
   #flowArea {
     background: rgba(255 255 255 / 0.15);
-    border-radius: 14px;
-    border: 2px solid var(--light-purple);
-    margin-top: 20px;
+    border-radius: 22px;
+    border: 3px solid var(--primary-light);
+    margin-top: 28px;
     position: relative;
     overflow: auto;
     width: 100%;
-    height: 600px;
+    height: 620px;
   }
   svg {
     user-select: none;
   }
 
-  /* Toast */
   .toast {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 40px;
-    padding: 14px 26px;
-    border-radius: 14px;
+    bottom: 48px;
+    padding: 14px 32px;
+    border-radius: 24px;
     color: white;
-    font-weight: 600;
-    font-size: 18px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    font-weight: 700;
+    font-size: 1.2rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     z-index: 9999;
     animation: fadein 0.3s, fadeout 0.3s 1.2s;
   }
-  .toast-success {background: #28a745;}
-  .toast-error {background: #dc3545;}
+  .toast-success {background: var(--success-green);}
+  .toast-error {background: var(--error-red);}
   @keyframes fadein {from {opacity: 0;} to {opacity: 1;}}
   @keyframes fadeout {from {opacity: 1;} to {opacity: 0;}}
 </style>
 </head>
 <body>
 
-<div id="loginPage">
-  <div class="login-container" role="main" aria-label="Login form">
-    <h2>Enter your email to sign in</h2>
-    <input type="email" id="email" placeholder="Enter Email" aria-label="Email" />
-    <input type="password" id="passcode" placeholder="Enter Passcode" aria-label="Passcode" />
-    <button aria-label="Login with Email and Passcode" onclick="login()">Login</button>
+<div id="loginPage" aria-label="Optional login screen">
+  <div class="login-container" role="form" aria-labelledby="loginTitle">
+    <h2 id="loginTitle">Optional Login</h2>
+    <p>Use email/passcode or sign up via Google, Facebook or Phone. Or continue without login.</p>
+    <input type="email" id="email" placeholder="Enter Email" aria-label="Email (optional)" />
+    <input type="password" id="passcode" placeholder="Enter Passcode" aria-label="Passcode (optional)" />
+    <button onclick="login()">Login</button>
     <p id="loginMessage" role="alert"></p>
-    <div class="or-text" aria-hidden="true">OR</div>
-    <div class="social-login" role="region" aria-label="Social Sign up options">
-      <button class="social-btn" onclick="alert('Google sign-up integration not implemented')"
-        aria-label="Sign up with Google">Sign up with Google</button>
-      <button class="social-btn" onclick="alert('Facebook sign-up integration not implemented')"
-        aria-label="Sign up with Facebook">Sign up with Facebook</button>
-      <button class="social-btn" onclick="alert('Phone number sign-up integration not implemented')"
-        aria-label="Sign up with Phone Number">Sign up with Phone Number</button>
+    <div class="or-text" aria-hidden="true">OR Sign up with</div>
+    <div class="social-login" role="region" aria-label="Social login options">
+      <button class="social-btn" onclick="alert('Google login not implemented')" aria-label="Sign up with Google">Google</button>
+      <button class="social-btn" onclick="alert('Facebook login not implemented')" aria-label="Sign up with Facebook">Facebook</button>
+      <button class="social-btn" onclick="alert('Phone login not implemented')" aria-label="Sign up with Phone Number">Phone Number</button>
+    </div>
+    <div class="skip-login" aria-label="Continue without login option">
+      Or <button onclick="skipLogin()">Continue without login</button>
     </div>
   </div>
 </div>
 
-<div id="appPage" role="main">
+<div id="appPage" role="main" aria-live="polite" aria-atomic="true" aria-relevant="additions">
   <nav id="sidebar" aria-label="Main navigation">
     <h2>STERLA</h2>
     <button class="nav-btn" onclick="showPage('homePage')" aria-label="Go to Home">Home</button>
@@ -433,111 +454,7 @@
   let selectedSubject = "";
   let chosenTopic = "";
 
-  function login() {
-    const email = emailInput.value.trim();
-    const passcode = passcodeInput.value.trim();
-    if(!email || !passcode){
-      loginMsg.textContent = "Please enter both email and passcode.";
-      loginMsg.style.color = "red";
-      return;
-    }
-    // Example simple auth
-    if(email === "admin@example.com" && passcode === "1234"){
-      loginMsg.textContent = "Login successful!";
-      loginMsg.style.color = "lightgreen";
-      loginPage.style.display = "none";
-      appPage.style.display = "flex";
-      welcomeUser.textContent = "Welcome, " + email;
-    } else {
-      loginMsg.textContent = "Invalid email or passcode.";
-      loginMsg.style.color = "red";
-    }
-  }
-
-  function loadSubjects(){
-    const box = document.getElementById("subjectsContainer");
-    box.innerHTML = "";
-    subjectsQuick.innerHTML = "";
-    for(const sub in subjectTopics){
-      box.innerHTML += `<div class="subject-card" onclick="selectSubject('${sub}')">${sub}</div>`;
-      subjectsQuick.innerHTML += `<button class="topic-btn" onclick="selectSubject('${sub}')">${sub}</button>`;
-    }
-  }
-
-  function selectSubject(sub){
-    selectedSubject = sub;
-    chosenTopic = "";
-    showPage("topicPage");
-    topicTitle.textContent = sub + " Topics";
-    renderTopicButtons();
-  }
-
-  function renderTopicButtons(){
-    if(!selectedSubject) return;
-    let html = "";
-    subjectTopics[selectedSubject].forEach(tp=>{
-      html+=`<button class="topic-btn" onclick="setTopic('${tp}')">${tp}</button>`;
-    });
-    topicButtons.innerHTML = html;
-  }
-  
-  function setTopic(tp){
-    chosenTopic = tp;
-    populateMindmapTopics();
-    showPage("mindmap");
-    showToast("Topic selected: " + tp);
-  }
-
-  function populateMindmapTopics(){
-    mmTopicSelect.innerHTML = '<option value="">Choose topic</option>';
-    if(selectedSubject && subjectTopics[selectedSubject]){
-      subjectTopics[selectedSubject].forEach(t=>{
-        let selected = (t === chosenTopic) ? "selected" : "";
-        mmTopicSelect.innerHTML += `<option value="${t}" ${selected}>${t}</option>`;
-      });
-    }
-  }
-
-  function loadFlowchart(){
-    const topic = mmTopicSelect.value || chosenTopic;
-    if(!topic){
-      alert("Please select a topic first.");
-      return;
-    }
-    const data = (detailedFlowData[selectedSubject] && detailedFlowData[selectedSubject][topic]) || [];
-    if(data.length === 0){
-      alert("No flowchart data for this topic.");
-      return;
-    }
-    svgContainer.innerHTML = "";
-    diagramTitle.textContent = selectedSubject + " - " + topic + " Flowchart";
-    const boxW = 250, boxH = 70, gapV = 60, startX = 150;
-    data.forEach((text,i) => {
-      const y = i*(boxH+gapV)+20;
-      let rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      rect.setAttribute("x", startX); rect.setAttribute("y", y);
-      rect.setAttribute("width", boxW); rect.setAttribute("height", boxH);
-      rect.setAttribute("fill", "#574b90");
-      rect.setAttribute("stroke", "#8a7cc1");
-      rect.setAttribute("rx", "12"); rect.setAttribute("ry","12");
-      svgContainer.appendChild(rect);
-
-      let txt = document.createElementNS("http://www.w3.org/2000/svg","text");
-      txt.textContent = text;
-      txt.setAttribute("x", startX + boxW/2);
-      txt.setAttribute("y", y + boxH/2 + 6);
-      txt.setAttribute("font-family","Poppins, sans-serif");
-      txt.setAttribute("text-anchor","middle");
-      txt.setAttribute("fill","white");
-      txt.setAttribute("font-size","16");
-      svgContainer.appendChild(txt);
-
-      if(i<data.length-1){
-        let line = document.createElementNS("http://www.w3.org/2000/svg","line");
-        line.setAttribute("x1", startX + boxW/2);
-        line.setAttribute("y1", y + boxH);
-        line.setAttribute("x2", startX + boxW/2);
-        line.setAttribute("y2", y + boxH + gapV - 24);
-        line.setAttribute("stroke", "#8a7cc1");
-        line.setAttribute("stroke-width", 4);
-        svgContainer
+  // Minimal sample data - extend as needed
+  const subjectTopics = {
+    English: ["Grammar", "Formal Letter", "Speech", "Prose"],
+    Math:
